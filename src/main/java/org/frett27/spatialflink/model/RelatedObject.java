@@ -6,6 +6,9 @@ public class RelatedObject {
 
 	public String role;
 
+	/**
+	 * way, role, relation
+	 */
 	public String type;
 	
 	
