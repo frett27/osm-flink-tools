@@ -10,18 +10,19 @@ import org.frett27.spatialflink.inputs.parser.NodeParser.DenseNodeState;
 import org.frett27.spatialflink.inputs.parser.NodeParser.NodesState;
 import org.frett27.spatialflink.model.RelatedObject;
 import org.frett27.spatialflink.model.Relation;
+import org.frett27.spatialflink.model.WayEntity;
 
 import crosby.binary.Osmformat.PrimitiveBlock;
 import crosby.binary.Osmformat.PrimitiveGroup;
 import crosby.binary.Osmformat.Way;
 
-public class WayParser extends Parser<Relation> {
+public class WayParser extends Parser<WayEntity> {
 
 	private OSMContext ctx;
 	private List<PrimitiveGroup> groups;
 
 	public WayParser(PrimitiveBlock block) {
-		
+
 		assert block != null;
 
 		this.ctx = createOSMContext(block);
@@ -39,7 +40,7 @@ public class WayParser extends Parser<Relation> {
 			left = new ArrayList<Way>(ways);
 		}
 
-		public Relation next() {
+		public WayEntity next() {
 
 			if (left.size() == 0)
 				return null;
@@ -79,10 +80,10 @@ public class WayParser extends Parser<Relation> {
 
 			long wid = w.getId();
 
-			Relation r = new Relation();
+			WayEntity r = new WayEntity();
 			r.fields = flds;
 			r.id = wid;
-			r.relatedObjects = rels;
+			r.relatedObjects = (rels == null ? null : rels.toArray(new RelatedObject[rels.size()]));
 
 			return r;
 		}
@@ -94,7 +95,7 @@ public class WayParser extends Parser<Relation> {
 	private WayParserDecomposer decomposer;
 
 	@Override
-	public Relation next() throws Exception {
+	public WayEntity next() throws Exception {
 
 		if (groups == null) { // end of group read
 			return null;
@@ -118,7 +119,7 @@ public class WayParser extends Parser<Relation> {
 
 		assert decomposer != null;
 
-		Relation w = decomposer.next();
+		WayEntity w = decomposer.next();
 
 		if (w == null) {
 			// next group

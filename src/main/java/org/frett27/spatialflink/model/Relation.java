@@ -4,6 +4,8 @@ import java.util.List;
 
 public class Relation extends AttributedEntity {
 
-	public List<RelatedObject> relatedObjects;
-	
+	public RelatedObject[] relatedObjects;
+
+
+
 }

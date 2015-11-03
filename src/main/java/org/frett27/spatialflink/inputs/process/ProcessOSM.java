@@ -12,6 +12,7 @@ import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.JoinFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.operators.Order;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -23,13 +24,13 @@ import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 import org.apache.flink.util.Collector;
-import org.frett27.spatialflink.inputs.OSMPBFNodeInputFormat;
-import org.frett27.spatialflink.inputs.OSMPBFRelationInputFormat;
-import org.frett27.spatialflink.inputs.OSMPBFWayInputFormat;
+import org.frett27.spatialflink.inputs.OSMPBFAllEntities;
+import org.frett27.spatialflink.model.AttributedEntity;
 import org.frett27.spatialflink.model.ComplexEntity;
 import org.frett27.spatialflink.model.NodeEntity;
 import org.frett27.spatialflink.model.RelatedObject;
 import org.frett27.spatialflink.model.Relation;
+import org.frett27.spatialflink.model.WayEntity;
 import org.frett27.spatialflink.tools.GeometryTools;
 import org.frett27.spatialflink.tools.PolygonCreator;
 import org.frett27.spatialflink.tools.PolygonCreator.Role;
@@ -67,9 +68,38 @@ public class ProcessOSM {
 	}
 
 	public static OSMResultsStreams constructOSMStreams(ExecutionEnvironment env, String inputFile) throws Exception {
-		OSMPBFNodeInputFormat iformat = new OSMPBFNodeInputFormat();
-		iformat.setFilePath(inputFile);
-		DataSource<NodeEntity> nodes = env.createInput(iformat, new GenericTypeInfo<NodeEntity>(NodeEntity.class));
+
+		OSMPBFAllEntities iallformat = new OSMPBFAllEntities();
+		iallformat.setFilePath(inputFile);
+
+		DataSource<AttributedEntity> allEntitiesAttributed = env.createInput(iallformat,
+				new GenericTypeInfo<AttributedEntity>(AttributedEntity.class));
+
+		// nodes
+		DataSet<NodeEntity> nodes = allEntitiesAttributed.flatMap(new FlatMapFunction<AttributedEntity, NodeEntity>() {
+			@Override
+			public void flatMap(AttributedEntity value, Collector<NodeEntity> out) throws Exception {
+				if (value instanceof NodeEntity)
+					out.collect((NodeEntity) value);
+			}
+		});
+
+		// ways
+		DataSet<WayEntity> ways = allEntitiesAttributed.flatMap(new FlatMapFunction<AttributedEntity, WayEntity>() {
+			@Override
+			public void flatMap(AttributedEntity value, Collector<WayEntity> out) throws Exception {
+				if (value instanceof WayEntity)
+					out.collect((WayEntity) value);
+			}
+		});
+
+		DataSet<Relation> rels = allEntitiesAttributed.flatMap(new FlatMapFunction<AttributedEntity, Relation>() {
+			@Override
+			public void flatMap(AttributedEntity value, Collector<Relation> out) throws Exception {
+				if (value instanceof Relation)
+					out.collect((Relation) value);
+			}
+		});
 
 		// get only the positions of the nodes
 		MapOperator<NodeEntity, Tuple3<Long, Double, Double>> onlypos = nodes
@@ -90,15 +120,10 @@ public class ProcessOSM {
 			}
 		});
 
-		// read the ways
-		OSMPBFWayInputFormat iformatw = new OSMPBFWayInputFormat();
-		iformatw.setFilePath(inputFile);
-		DataSource<Relation> ways = env.createInput(iformatw, new GenericTypeInfo<Relation>(Relation.class));
-
-		FlatMapOperator<Relation, Tuple3<Long, Long, Integer>> relsLink = ways
-				.flatMap(new FlatMapFunction<Relation, Tuple3<Long, Long, Integer>>() {
+		FlatMapOperator<WayEntity, Tuple3<Long, Long, Integer>> relsLink = ways
+				.flatMap(new FlatMapFunction<WayEntity, Tuple3<Long, Long, Integer>>() {
 					@Override
-					public void flatMap(Relation value, Collector<Tuple3<Long, Long, Integer>> out) throws Exception {
+					public void flatMap(WayEntity value, Collector<Tuple3<Long, Long, Integer>> out) throws Exception {
 						if (value.relatedObjects != null) {
 							int c = 0;
 							for (RelatedObject r : value.relatedObjects) {
@@ -112,7 +137,7 @@ public class ProcessOSM {
 
 		// relslink contains id, related and order
 		// only pos contains id, x, y
-		DataSet<Tuple4<Long, Integer, Double, Double>> joinedWaysWithPoints = relsLink.join(onlypos).where(1).equalTo(0)
+		DataSet<Tuple4<Long, Integer, Double, Double>> joinedWaysWithPoints = relsLink.joinWithHuge(onlypos).where(1).equalTo(0)
 				.projectFirst(0, 2).projectSecond(1, 2);
 
 		// join on related, keep id, order, x, y
@@ -153,14 +178,14 @@ public class ProcessOSM {
 
 		// create the polyline entities
 
-		DataSet<ComplexEntity> retWaysEntities = ways.join(waysGeometry).where(new KeySelector<Relation, Long>() {
+		DataSet<ComplexEntity> retWaysEntities = ways.join(waysGeometry).where(new KeySelector<WayEntity, Long>() {
 			@Override
-			public Long getKey(Relation value) throws Exception {
+			public Long getKey(WayEntity value) throws Exception {
 				return value.id;
 			}
-		}).equalTo(0).with(new FlatJoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
+		}).equalTo(0).with(new FlatJoinFunction<WayEntity, Tuple2<Long, byte[]>, ComplexEntity>() {
 			@Override
-			public void join(Relation first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
+			public void join(WayEntity first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
 					throws Exception {
 
 				if (first == null) {
@@ -183,9 +208,29 @@ public class ProcessOSM {
 
 		});
 
-		OSMPBFRelationInputFormat iformatrels = new OSMPBFRelationInputFormat();
-		iformatrels.setFilePath(inputFile);
-		DataSource<Relation> rels = env.createInput(iformatrels, new GenericTypeInfo<Relation>(Relation.class));
+		// ways that contains polygons
+		DataSet<ComplexEntity> waysAndPolys = retWaysEntities.map(new MapFunction<ComplexEntity, ComplexEntity>() {
+			@Override
+			public ComplexEntity map(ComplexEntity value) throws Exception {
+
+				if (value != null) {
+					if (value.fields != null && value.fields.containsKey("area")) {
+						assert value.geomType == Type.Polyline;
+						Polyline polyline = (Polyline) GeometryEngine.geometryFromEsriShape(value.shapeGeometry,
+								value.geomType);
+						Polygon p = new Polygon();
+						p.add(polyline, false);
+
+						value.shapeGeometry = GeometryEngine.geometryToEsriShape(p);
+						value.geomType = Type.Polygon;
+
+					}
+				}
+
+				return value;
+			}
+
+		});
 
 		DataSet<Relation> retRelations = rels.filter(new FilterFunction<Relation>() {
 			@Override
@@ -285,9 +330,31 @@ public class ProcessOSM {
 
 		OSMResultsStreams rs = new OSMResultsStreams();
 		rs.retNodesWithAttributes = retNodesWithAttributes;
-		rs.retPolygons = retPolygons;
+		rs.retPolygons = retPolygons.union(waysAndPolys.filter(new FilterFunction<ComplexEntity>() {
+			@Override
+			public boolean filter(ComplexEntity value) throws Exception {
+				if (value == null)
+					return false;
+
+				if (value.geomType == Type.Polygon)
+					return true;
+				return false;
+			}
+		}));
 		rs.retRelations = retRelations;
-		rs.retWaysEntities = retWaysEntities;
+		
+		
+		rs.retWaysEntities = waysAndPolys.filter(new FilterFunction<ComplexEntity>() {
+			@Override
+			public boolean filter(ComplexEntity value) throws Exception {
+				if (value == null)
+					return false;
+
+				if (value.geomType == Type.Polyline)
+					return true;
+				return false;
+			}
+		});
 
 		return rs;
 
@@ -295,14 +362,14 @@ public class ProcessOSM {
 
 	public static void main(String[] args) throws Exception {
 
-		File resultFolder = new File("f:\\temp\\testfolder");
+		File resultFolder = new File("f:\\temp\\testfolder2");
 		if (!resultFolder.exists()) {
 			assert resultFolder.mkdirs();
 		}
 
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
-		//String file = "C:/projets/OSMImport/france-latest.osm.pbf";
+		// String file = "C:/projets/OSMImport/france-latest.osm.pbf";
 		String file = "F:/temp/france-latest.osm.pbf";
 		// String file = "C:/projets/OSMImport/rhone-alpes-latest.osm.pbf";
 

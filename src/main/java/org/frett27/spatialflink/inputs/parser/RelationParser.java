@@ -24,7 +24,6 @@ public class RelationParser extends Parser<Relation> {
 		groups = new ArrayList<PrimitiveGroup>(block.getPrimitivegroupList());
 	}
 
-	
 	public class RelationParserDecomposer {
 
 		private ArrayList<crosby.binary.Osmformat.Relation> left;
@@ -104,7 +103,8 @@ public class RelationParser extends Parser<Relation> {
 			Relation returnValue = new Relation();
 			returnValue.fields = flds;
 			returnValue.id = wid;
-			returnValue.relatedObjects = relatedObjects;
+			returnValue.relatedObjects = (relatedObjects == null ? null
+					: relatedObjects.toArray(new RelatedObject[relatedObjects.size()]));
 
 			return returnValue;
 		}

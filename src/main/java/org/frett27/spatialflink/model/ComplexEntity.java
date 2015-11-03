@@ -1,5 +1,7 @@
 package org.frett27.spatialflink.model;
 
+import org.apache.flink.types.ByteValue;
+
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 
