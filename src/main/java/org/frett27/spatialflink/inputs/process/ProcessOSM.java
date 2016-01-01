@@ -361,26 +361,35 @@ public class ProcessOSM {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
+		if (args.length < 2 )
+			throw new Exception("not enought parameters");
+		String inputPbf = args[0];
+		
+		System.out.println(" input pbf :" + inputPbf);
 
-		File resultFolder = new File("f:\\temp\\testfolder2");
-		if (!resultFolder.exists()) {
-			assert resultFolder.mkdirs();
-		}
+		String outputResultFolder = args[1];
+		System.out.println(" output result folder :" + outputResultFolder);
+		
+//		File resultFolder = new File("f:\\temp\\testfolder2");
+//		if (!resultFolder.exists()) {
+//			assert resultFolder.mkdirs();
+//		}
 
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
 		// String file = "C:/projets/OSMImport/france-latest.osm.pbf";
-		String file = "F:/temp/france-latest.osm.pbf";
+		// String file = "F:/temp/france-latest.osm.pbf";
 		// String file = "C:/projets/OSMImport/rhone-alpes-latest.osm.pbf";
 
-		OSMResultsStreams rs = constructOSMStreams(env, file);
+		OSMResultsStreams rs = constructOSMStreams(env, inputPbf);
 
 		rs.retNodesWithAttributes.map(new MapFunction<NodeEntity, Tuple4<Long, Double, Double, String>>() {
 			@Override
 			public Tuple4<Long, Double, Double, String> map(NodeEntity value) throws Exception {
 				return new Tuple4<>(value.id, value.x, value.y, convertToString(value.fields));
 			}
-		}).writeAsCsv(new File(resultFolder, "nodes.csv").getAbsolutePath());
+		}).writeAsCsv(outputResultFolder +  "/nodes.csv");
 
 		rs.retPolygons.map(new MapFunction<ComplexEntity, Tuple3<Long, String, String>>() {
 			@Override
@@ -388,7 +397,7 @@ public class ProcessOSM {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
 						convertToString(value.fields));
 			}
-		}).writeAsCsv(new File(resultFolder, "polygons.csv").getAbsolutePath());
+		}).writeAsCsv(outputResultFolder +   "/polygons.csv");
 
 		rs.retWaysEntities.map(new MapFunction<ComplexEntity, Tuple3<Long, String, String>>() {
 			@Override
@@ -397,7 +406,7 @@ public class ProcessOSM {
 						convertToString(value.fields));
 			}
 
-		}).writeAsCsv(new File(resultFolder, "ways.csv").getAbsolutePath());
+		}).writeAsCsv(outputResultFolder +   "/ways.csv");
 
 		rs.retRelations.map(new MapFunction<Relation, Tuple2<Long, String>>() {
 			@Override
@@ -405,7 +414,7 @@ public class ProcessOSM {
 				return new Tuple2<>(value.id, convertToString(value.fields));
 			}
 
-		}).writeAsCsv(new File(resultFolder, "rels.csv").getAbsolutePath());
+		}).writeAsCsv(outputResultFolder +   "/rels.csv");
 
 		env.execute();
 	}

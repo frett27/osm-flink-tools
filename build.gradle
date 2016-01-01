@@ -42,6 +42,11 @@ dependencies {
 
     testCompile "junit:junit:4.11"
 }
+jar {
+ manifest {
+        attributes 'Main-Class': 'org.frett27.spatialflink.inputs.process.ProcessOSM'
+}
+}
 
 shadowJar {
   dependencies {

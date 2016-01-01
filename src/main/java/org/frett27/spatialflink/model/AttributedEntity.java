@@ -10,7 +10,4 @@ public class AttributedEntity  {
 
 	public Map<String, Object> fields;
 
-	
-	
-
 }
