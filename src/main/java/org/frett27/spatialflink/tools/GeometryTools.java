@@ -9,7 +9,6 @@ import com.esri.core.geometry.Polyline;
 public class GeometryTools {
 
 	public static String toAscii(byte[] bytes) throws Exception {
-
 		StringBuilder sb = new StringBuilder();
 		String encodeBase64String = Base64.encodeBase64String(bytes);
 		// remove extra \n
@@ -17,7 +16,6 @@ public class GeometryTools {
 		for (String s : lines) {
 			sb.append(s);
 		}
-
 		return sb.toString();
 	}
 

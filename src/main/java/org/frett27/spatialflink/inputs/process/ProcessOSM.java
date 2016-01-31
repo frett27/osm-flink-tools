@@ -2,6 +2,8 @@ package org.frett27.spatialflink.inputs.process;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,13 +18,14 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.operators.DataSource;
-import org.apache.flink.api.java.operators.FlatMapOperator;
-import org.apache.flink.api.java.operators.MapOperator;
+import org.apache.flink.api.java.io.CsvInputFormat;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
+import org.apache.flink.api.java.typeutils.TupleTypeInfo;
+import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.apache.flink.core.fs.Path;
 import org.apache.flink.util.Collector;
 import org.frett27.spatialflink.inputs.OSMPBFAllEntities;
 import org.frett27.spatialflink.model.AttributedEntity;
@@ -58,12 +61,40 @@ public class ProcessOSM {
 		return sb.toString();
 	}
 
+	static Map<String, Object> fromString(String fieldsValuePairs) {
+		if (fieldsValuePairs == null)
+			return null;
+
+		if (fieldsValuePairs.trim().isEmpty())
+			return null;
+
+		Map<String, Object> fields = new HashMap<>();
+
+		String[] pairs = fieldsValuePairs.split("|");
+		for (String s : pairs) {
+			if (s.isEmpty())
+				continue;
+
+			int idx = s.indexOf('=');
+			if (idx == -1)
+				continue;
+
+			String fn = s.substring(0, idx);
+			String v = s.substring(idx + 1);
+			fields.put(fn, v);
+
+		}
+
+		return (Map<String, Object>) fields;
+
+	}
+
 	public static class OSMResultsStreams {
 
-		DataSet<ComplexEntity> retWaysEntities;
-		DataSet<ComplexEntity> retPolygons;
-		DataSet<NodeEntity> retNodesWithAttributes;
-		DataSet<Relation> retRelations;
+		public DataSet<ComplexEntity> retWaysEntities;
+		public DataSet<ComplexEntity> retPolygons;
+		public DataSet<NodeEntity> retNodesWithAttributes;
+		public DataSet<Relation> retRelations;
 
 	}
 
@@ -72,46 +103,70 @@ public class ProcessOSM {
 		OSMPBFAllEntities iallformat = new OSMPBFAllEntities();
 		iallformat.setFilePath(inputFile);
 
-		DataSource<AttributedEntity> allEntitiesAttributed = env.createInput(iallformat,
+		DataSet<AttributedEntity> allEntitiesAttributed = env.createInput(iallformat,
 				new GenericTypeInfo<AttributedEntity>(AttributedEntity.class));
 
 		// nodes
-		DataSet<NodeEntity> nodes = allEntitiesAttributed.flatMap(new FlatMapFunction<AttributedEntity, NodeEntity>() {
+		DataSet<NodeEntity> nodes = allEntitiesAttributed.map(new MapFunction<AttributedEntity, NodeEntity>() {
 			@Override
-			public void flatMap(AttributedEntity value, Collector<NodeEntity> out) throws Exception {
+			public NodeEntity map(AttributedEntity value) throws Exception {
 				if (value instanceof NodeEntity)
-					out.collect((NodeEntity) value);
+					return (NodeEntity) value;
+
+				return null;
+			}
+		}).filter(new FilterFunction<NodeEntity>() {
+			@Override
+			public boolean filter(NodeEntity value) throws Exception {
+				return value != null;
 			}
 		});
 
 		// ways
-		DataSet<WayEntity> ways = allEntitiesAttributed.flatMap(new FlatMapFunction<AttributedEntity, WayEntity>() {
+		DataSet<WayEntity> ways = allEntitiesAttributed
+
+		.map(new MapFunction<AttributedEntity, WayEntity>() {
 			@Override
-			public void flatMap(AttributedEntity value, Collector<WayEntity> out) throws Exception {
+			public WayEntity map(AttributedEntity value) throws Exception {
 				if (value instanceof WayEntity)
-					out.collect((WayEntity) value);
+					return (WayEntity) value;
+
+				return null;
+			}
+		}).filter(new FilterFunction<WayEntity>() {
+			@Override
+			public boolean filter(WayEntity value) throws Exception {
+				return value != null;
 			}
 		});
 
-		DataSet<Relation> rels = allEntitiesAttributed.flatMap(new FlatMapFunction<AttributedEntity, Relation>() {
+		DataSet<Relation> rels = allEntitiesAttributed
+
+		.map(new MapFunction<AttributedEntity, Relation>() {
 			@Override
-			public void flatMap(AttributedEntity value, Collector<Relation> out) throws Exception {
+			public Relation map(AttributedEntity value) throws Exception {
 				if (value instanceof Relation)
-					out.collect((Relation) value);
+					return (Relation) value;
+
+				return null;
+			}
+		}).filter(new FilterFunction<Relation>() {
+			@Override
+			public boolean filter(Relation value) throws Exception {
+				return value != null;
 			}
 		});
 
 		// get only the positions of the nodes
-		MapOperator<NodeEntity, Tuple3<Long, Double, Double>> onlypos = nodes
+		DataSet<Tuple3<Long, Double, Double>> onlypos = nodes
 				.map(new MapFunction<NodeEntity, Tuple3<Long, Double, Double>>() {
 					@Override
 					public Tuple3<Long, Double, Double> map(NodeEntity value) throws Exception {
 						return new Tuple3<Long, Double, Double>(value.id, value.x, value.y);
 					}
-				});
+				}).sortPartition(0, Order.ASCENDING);
 
 		DataSet<NodeEntity> retNodesWithAttributes = nodes.filter(new FilterFunction<NodeEntity>() {
-
 			@Override
 			public boolean filter(NodeEntity value) throws Exception {
 				if (value == null)
@@ -120,7 +175,7 @@ public class ProcessOSM {
 			}
 		});
 
-		FlatMapOperator<WayEntity, Tuple3<Long, Long, Integer>> relsLink = ways
+		DataSet<Tuple3<Long, Long, Integer>> relsLink = ways
 				.flatMap(new FlatMapFunction<WayEntity, Tuple3<Long, Long, Integer>>() {
 					@Override
 					public void flatMap(WayEntity value, Collector<Tuple3<Long, Long, Integer>> out) throws Exception {
@@ -130,15 +185,13 @@ public class ProcessOSM {
 								out.collect(new Tuple3<>(value.id, r.relatedId, c++));
 							}
 						}
-
 					}
-
-				});
+				}).sortPartition(1, Order.ASCENDING);
 
 		// relslink contains id, related and order
 		// only pos contains id, x, y
-		DataSet<Tuple4<Long, Integer, Double, Double>> joinedWaysWithPoints = relsLink.joinWithHuge(onlypos).where(1).equalTo(0)
-				.projectFirst(0, 2).projectSecond(1, 2);
+		DataSet<Tuple4<Long, Integer, Double, Double>> joinedWaysWithPoints = relsLink.joinWithHuge(onlypos).where(1)
+				.equalTo(0).projectFirst(0, 2).projectSecond(1, 2);
 
 		// join on related, keep id, order, x, y
 
@@ -177,7 +230,6 @@ public class ProcessOSM {
 				});
 
 		// create the polyline entities
-
 		DataSet<ComplexEntity> retWaysEntities = ways.join(waysGeometry).where(new KeySelector<WayEntity, Long>() {
 			@Override
 			public Long getKey(WayEntity value) throws Exception {
@@ -311,6 +363,8 @@ public class ProcessOSM {
 					}
 				});
 
+		// joins with attributes
+
 		DataSet<ComplexEntity> retPolygons = rels.join(constructedPolygons).where(new KeySelector<Relation, Long>() {
 			@Override
 			public Long getKey(Relation value) throws Exception {
@@ -342,8 +396,7 @@ public class ProcessOSM {
 			}
 		}));
 		rs.retRelations = retRelations;
-		
-		
+
 		rs.retWaysEntities = waysAndPolys.filter(new FilterFunction<ComplexEntity>() {
 			@Override
 			public boolean filter(ComplexEntity value) throws Exception {
@@ -352,30 +405,154 @@ public class ProcessOSM {
 
 				if (value.geomType == Type.Polyline)
 					return true;
+
 				return false;
 			}
-		});
+		}).returns("DataSet<WayEntity>");
 
 		return rs;
 
 	}
 
+	/**
+	 * read the csv, and construct streams
+	 * 
+	 * @param env
+	 * @param folder
+	 * @return
+	 * @throws Exception
+	 */
+	public static OSMResultsStreams constructOSMStreamsFromFolder(ExecutionEnvironment env, File folder)
+			throws Exception {
+
+		File nodes = new File(folder, "nodes.csv");
+		DataSet<Tuple4<Long, Double, Double, String>> nodesDataset = env.readCsvFile(nodes.getAbsolutePath())
+				.types(Long.class, Double.class, Double.class, String.class);
+		OSMResultsStreams result = new OSMResultsStreams();
+		DataSet<NodeEntity> nodeStream = nodesDataset
+				.map(new MapFunction<Tuple4<Long, Double, Double, String>, NodeEntity>() {
+					@Override
+					public NodeEntity map(Tuple4<Long, Double, Double, String> value) throws Exception {
+
+						NodeEntity nodeEntity = new NodeEntity();
+						nodeEntity.id = value.f0;
+						nodeEntity.x = value.f1;
+						nodeEntity.y = value.f2;
+						nodeEntity.fields = fromString(value.f3);
+						return nodeEntity;
+					}
+				});
+
+		File polygons = new File(folder, "polygons.csv");
+
+
+		DataSet<Tuple3<Long, String, String>> polygonsDataset = 
+				env.readCsvFile(polygons.getAbsolutePath()).types(Long.class, String.class, String.class); 
+
+		DataSet<ComplexEntity> polygonsStream = polygonsDataset
+				.map(new MapFunction<Tuple3<Long, String, String>, ComplexEntity>() {
+					@Override
+					public ComplexEntity map(Tuple3<Long, String, String> value) throws Exception {
+
+						ComplexEntity polygonEntity = new ComplexEntity();
+						polygonEntity.id = value.f0;
+						polygonEntity.shapeGeometry = GeometryTools.fromAscii(value.f1);
+						polygonEntity.fields = fromString(value.f2);
+						return polygonEntity;
+					}
+				});
+
+		File ways = new File(folder, "ways.csv");
+		DataSet<Tuple3<Long, String, String>> waysDataset = env.readCsvFile(ways.getAbsolutePath()).types(Long.class,
+				String.class, String.class);
+
+		DataSet<ComplexEntity> waysStream = waysDataset
+				.map(new MapFunction<Tuple3<Long, String, String>, ComplexEntity>() {
+					@Override
+					public ComplexEntity map(Tuple3<Long, String, String> value) throws Exception {
+
+						ComplexEntity waysEntity = new ComplexEntity();
+						waysEntity.id = value.f0;
+						waysEntity.shapeGeometry = GeometryTools.fromAscii(value.f1);
+						waysEntity.fields = fromString(value.f2);
+						return waysEntity;
+					}
+				});
+
+		File rels = new File(folder, "rels.csv");
+		DataSet<Tuple3<Long, String, String>> relsDataset = env.readCsvFile(rels.getAbsolutePath()).types(Long.class,
+				String.class, String.class);
+
+		DataSet<Relation> relationStream = relsDataset.map(new MapFunction<Tuple3<Long, String, String>, Relation>() {
+			@Override
+			public Relation map(Tuple3<Long, String, String> value) throws Exception {
+
+				Relation r = new Relation();
+				r.id = value.f0;
+				r.fields = fromString(value.f1);
+
+				if (value.f2 != null && !value.f2.isEmpty()) {
+
+					List<RelatedObject> l = new ArrayList<RelatedObject>();
+
+					String[] elements = value.f2.split("||");
+					for (String s : elements) {
+
+						Map<String, Object> h = fromString(s);
+						RelatedObject ro = new RelatedObject();
+
+						// h.put("relid", r.relatedId);
+						// h.put("role", r.role);
+						// h.put("type", r.type);
+						//
+						ro.relatedId = Long.parseLong((String) h.get("relid"));
+						ro.role = (String) h.get("role");
+						ro.type = (String) h.get("type");
+
+						l.add(ro);
+
+					}
+					r.relatedObjects = l.toArray(new RelatedObject[l.size()]);
+				}
+
+				return r;
+			}
+		});
+
+		result.retNodesWithAttributes = nodeStream;
+		result.retPolygons = polygonsStream;
+		result.retWaysEntities = waysStream;
+		result.retRelations = relationStream;
+
+		// relations
+
+		return result;
+	}
+
 	public static void main(String[] args) throws Exception {
-		
-		if (args.length < 2 )
+
+		if (args.length < 2)
 			throw new Exception("not enought parameters");
 		String inputPbf = args[0];
-		
+
 		System.out.println(" input pbf :" + inputPbf);
 
 		String outputResultFolder = args[1];
 		System.out.println(" output result folder :" + outputResultFolder);
-		
-//		File resultFolder = new File("f:\\temp\\testfolder2");
-//		if (!resultFolder.exists()) {
-//			assert resultFolder.mkdirs();
-//		}
 
+		// File resultFolder = new File("f:\\temp\\testfolder2");
+		// if (!resultFolder.exists()) {
+		// assert resultFolder.mkdirs();
+		// }
+
+		// Configuration configuration = new Configuration();
+		// configuration.setLong("taskmanager.heap.mb", 4000L);
+		// configuration.setInteger("taskmanager.numberOfTaskSlots", 4);
+		// configuration.setInteger("parallelization.degree.default", 4);
+		//
+		// ExecutionEnvironment env =
+		// ExecutionEnvironment.createLocalEnvironment(configuration);
+		//
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
 		// String file = "C:/projets/OSMImport/france-latest.osm.pbf";
@@ -389,7 +566,7 @@ public class ProcessOSM {
 			public Tuple4<Long, Double, Double, String> map(NodeEntity value) throws Exception {
 				return new Tuple4<>(value.id, value.x, value.y, convertToString(value.fields));
 			}
-		}).writeAsCsv(outputResultFolder +  "/nodes.csv");
+		}).writeAsCsv(outputResultFolder + "/nodes.csv");
 
 		rs.retPolygons.map(new MapFunction<ComplexEntity, Tuple3<Long, String, String>>() {
 			@Override
@@ -397,7 +574,7 @@ public class ProcessOSM {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
 						convertToString(value.fields));
 			}
-		}).writeAsCsv(outputResultFolder +   "/polygons.csv");
+		}).writeAsCsv(outputResultFolder + "/polygons.csv");
 
 		rs.retWaysEntities.map(new MapFunction<ComplexEntity, Tuple3<Long, String, String>>() {
 			@Override
@@ -406,16 +583,33 @@ public class ProcessOSM {
 						convertToString(value.fields));
 			}
 
-		}).writeAsCsv(outputResultFolder +   "/ways.csv");
+		}).writeAsCsv(outputResultFolder + "/ways.csv");
 
-		rs.retRelations.map(new MapFunction<Relation, Tuple2<Long, String>>() {
+		rs.retRelations.map(new MapFunction<Relation, Tuple3<Long, String, String>>() {
 			@Override
-			public Tuple2<Long, String> map(Relation value) throws Exception {
-				return new Tuple2<>(value.id, convertToString(value.fields));
+			public Tuple3<Long, String, String> map(Relation value) throws Exception {
+
+				StringBuilder sb = new StringBuilder();
+				if (value.relatedObjects != null) {
+
+					for (RelatedObject r : value.relatedObjects) {
+						HashMap<String, Object> h = new HashMap<>();
+						h.put("relid", r.relatedId);
+						h.put("role", r.role);
+						h.put("type", r.type);
+						if (sb.length() > 0) {
+							sb.append("||");
+						}
+						sb.append(convertToString(h));
+					}
+				}
+
+				return new Tuple3<>(value.id, convertToString(value.fields), sb.toString());
 			}
 
-		}).writeAsCsv(outputResultFolder +   "/rels.csv");
+		}).writeAsCsv(outputResultFolder + "/rels.csv");
 
+		System.out.println(env.getExecutionPlan());
 		env.execute();
 	}
 
