@@ -1,5 +1,7 @@
 # Osm-Flink-Tools
 
+![](https://travis-ci.org/frett27/osm-flink-tools.svg?branch=master)
+
 Tools for integrating OSM data in HDFS or CSV files.
 
 use the **ESRI-Geometry Hadoop tools** for efficient **ser/deser** 
