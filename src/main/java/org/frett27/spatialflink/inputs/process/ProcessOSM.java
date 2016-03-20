@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatJoinFunction;
@@ -14,18 +13,13 @@ import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.JoinFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.operators.Order;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.io.CsvInputFormat;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
-import org.apache.flink.api.java.typeutils.TupleTypeInfo;
-import org.apache.flink.api.java.typeutils.TypeExtractor;
-import org.apache.flink.core.fs.Path;
 import org.apache.flink.util.Collector;
 import org.frett27.spatialflink.inputs.OSMPBFAllEntities;
 import org.frett27.spatialflink.model.AttributedEntity;
@@ -35,6 +29,7 @@ import org.frett27.spatialflink.model.RelatedObject;
 import org.frett27.spatialflink.model.Relation;
 import org.frett27.spatialflink.model.WayEntity;
 import org.frett27.spatialflink.tools.GeometryTools;
+import org.frett27.spatialflink.tools.MapStringTools;
 import org.frett27.spatialflink.tools.PolygonCreator;
 import org.frett27.spatialflink.tools.PolygonCreator.Role;
 
@@ -47,47 +42,6 @@ import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 
 public class ProcessOSM {
-
-	static String convertToString(Map<String, Object> attributes) {
-		if (attributes == null)
-			return "";
-
-		StringBuilder sb = new StringBuilder();
-		for (Entry<String, Object> e : attributes.entrySet()) {
-			if (sb.length() > 0)
-				sb.append('|');
-			sb.append(e.getKey()).append("=").append(e.getValue() == null ? "" : e.getValue());
-		}
-		return sb.toString();
-	}
-
-	static Map<String, Object> fromString(String fieldsValuePairs) {
-		if (fieldsValuePairs == null)
-			return null;
-
-		if (fieldsValuePairs.trim().isEmpty())
-			return null;
-
-		Map<String, Object> fields = new HashMap<>();
-
-		String[] pairs = fieldsValuePairs.split("|");
-		for (String s : pairs) {
-			if (s.isEmpty())
-				continue;
-
-			int idx = s.indexOf('=');
-			if (idx == -1)
-				continue;
-
-			String fn = s.substring(0, idx);
-			String v = s.substring(idx + 1);
-			fields.put(fn, v);
-
-		}
-
-		return (Map<String, Object>) fields;
-
-	}
 
 	public static class OSMResultsStreams {
 
@@ -438,7 +392,7 @@ public class ProcessOSM {
 						nodeEntity.id = value.f0;
 						nodeEntity.x = value.f1;
 						nodeEntity.y = value.f2;
-						nodeEntity.fields = fromString(value.f3);
+						nodeEntity.fields = MapStringTools.fromString(value.f3);
 						return nodeEntity;
 					}
 				});
@@ -457,7 +411,7 @@ public class ProcessOSM {
 						ComplexEntity polygonEntity = new ComplexEntity();
 						polygonEntity.id = value.f0;
 						polygonEntity.shapeGeometry = GeometryTools.fromAscii(value.f1);
-						polygonEntity.fields = fromString(value.f2);
+						polygonEntity.fields = MapStringTools.fromString(value.f2);
 						return polygonEntity;
 					}
 				});
@@ -474,7 +428,7 @@ public class ProcessOSM {
 						ComplexEntity waysEntity = new ComplexEntity();
 						waysEntity.id = value.f0;
 						waysEntity.shapeGeometry = GeometryTools.fromAscii(value.f1);
-						waysEntity.fields = fromString(value.f2);
+						waysEntity.fields = MapStringTools.fromString(value.f2);
 						return waysEntity;
 					}
 				});
@@ -489,7 +443,7 @@ public class ProcessOSM {
 
 				Relation r = new Relation();
 				r.id = value.f0;
-				r.fields = fromString(value.f1);
+				r.fields = MapStringTools.fromString(value.f1);
 
 				if (value.f2 != null && !value.f2.isEmpty()) {
 
@@ -498,7 +452,7 @@ public class ProcessOSM {
 					String[] elements = value.f2.split("||");
 					for (String s : elements) {
 
-						Map<String, Object> h = fromString(s);
+						Map<String, Object> h = MapStringTools.fromString(s);
 						RelatedObject ro = new RelatedObject();
 
 						// h.put("relid", r.relatedId);
@@ -564,7 +518,7 @@ public class ProcessOSM {
 		rs.retNodesWithAttributes.map(new MapFunction<NodeEntity, Tuple4<Long, Double, Double, String>>() {
 			@Override
 			public Tuple4<Long, Double, Double, String> map(NodeEntity value) throws Exception {
-				return new Tuple4<>(value.id, value.x, value.y, convertToString(value.fields));
+				return new Tuple4<>(value.id, value.x, value.y, MapStringTools.convertToString(value.fields));
 			}
 		}).writeAsCsv(outputResultFolder + "/nodes.csv");
 
@@ -572,7 +526,7 @@ public class ProcessOSM {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
-						convertToString(value.fields));
+						MapStringTools.convertToString(value.fields));
 			}
 		}).writeAsCsv(outputResultFolder + "/polygons.csv");
 
@@ -580,7 +534,7 @@ public class ProcessOSM {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
-						convertToString(value.fields));
+						MapStringTools.convertToString(value.fields));
 			}
 
 		}).writeAsCsv(outputResultFolder + "/ways.csv");
@@ -600,11 +554,11 @@ public class ProcessOSM {
 						if (sb.length() > 0) {
 							sb.append("||");
 						}
-						sb.append(convertToString(h));
+						sb.append(MapStringTools.convertToString(h));
 					}
 				}
 
-				return new Tuple3<>(value.id, convertToString(value.fields), sb.toString());
+				return new Tuple3<>(value.id, MapStringTools.convertToString(value.fields), sb.toString());
 			}
 
 		}).writeAsCsv(outputResultFolder + "/rels.csv");
