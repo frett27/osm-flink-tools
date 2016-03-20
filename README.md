@@ -4,7 +4,7 @@
 
 Tools for integrating OSM data in HDFS or CSV files.
 
-use the **ESRI-Geometry Hadoop tools** for efficient **ser/deser** 
+use the **ESRI-Geometry java API** [https://github.com/Esri/geometry-api-java](https://github.com/Esri/geometry-api-java) for efficient **ser/deser** 
 
 This project provide inputFormat for reading PBF OSM files and create lines, polygons, relations, permitting to use OSM data in big data chains
 
