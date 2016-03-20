@@ -362,7 +362,7 @@ public class ProcessOSM {
 
 				return false;
 			}
-		}).returns("DataSet<WayEntity>");
+		}); // .returns("DataSet<ComplexEntity>");
 
 		return rs;
 
