@@ -1,0 +1,420 @@
+ input pbf :/home/ec2-user/france-latest.osm.pbf
+ output result folder :/home/ec2-user/france
+03/20/2016 12:37:56	Job execution switched to status RUNNING.
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(1/4) switched to SCHEDULED 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(1/4) switched to DEPLOYING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(2/4) switched to SCHEDULED 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(2/4) switched to DEPLOYING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(3/4) switched to SCHEDULED 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(3/4) switched to DEPLOYING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(4/4) switched to SCHEDULED 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(4/4) switched to DEPLOYING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(3/4) switched to RUNNING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(1/4) switched to RUNNING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(4/4) switched to RUNNING 
+03/20/2016 12:37:56	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(2/4) switched to RUNNING 
+03/20/2016 13:29:53	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(1/4) switched to FINISHED 
+03/20/2016 13:29:53	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(3/4) switched to FINISHED 
+03/20/2016 13:29:53	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(4/4) switched to FINISHED 
+03/20/2016 13:29:53	DataSource (at constructOSMStreams(ProcessOSM.java:60) (org.frett27.spatialflink.inputs.OSMPBFAllEntities))(2/4) switched to FINISHED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(1/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(1/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(3/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(2/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(3/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(1/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(2/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(4/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(1/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(2/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(3/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(2/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(3/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(4/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(4/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(1/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(2/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(3/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(2/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(1/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(3/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(4/4) switched to SCHEDULED 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(4/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(4/4) switched to DEPLOYING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(4/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(2/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(2/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(2/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(1/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(4/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(1/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(3/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(3/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(4/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(1/4) switched to RUNNING 
+03/20/2016 13:29:53	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(3/4) switched to RUNNING 
+03/20/2016 13:29:54	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(4/4) switched to SCHEDULED 
+03/20/2016 13:29:54	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(4/4) switched to DEPLOYING 
+03/20/2016 13:29:54	Map (Map at constructOSMStreams(ProcessOSM.java:115))(4/4) switched to SCHEDULED 
+03/20/2016 13:29:54	Map (Map at constructOSMStreams(ProcessOSM.java:115))(4/4) switched to DEPLOYING 
+03/20/2016 13:29:54	Map (Map at constructOSMStreams(ProcessOSM.java:115))(3/4) switched to SCHEDULED 
+03/20/2016 13:29:54	Map (Map at constructOSMStreams(ProcessOSM.java:115))(3/4) switched to DEPLOYING 
+03/20/2016 13:29:54	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(3/4) switched to SCHEDULED 
+03/20/2016 13:29:54	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(3/4) switched to DEPLOYING 
+03/20/2016 13:29:54	Map (Map at constructOSMStreams(ProcessOSM.java:115))(3/4) switched to RUNNING 
+03/20/2016 13:29:54	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(3/4) switched to RUNNING 
+03/20/2016 13:29:54	Map (Map at constructOSMStreams(ProcessOSM.java:115))(4/4) switched to RUNNING 
+03/20/2016 13:29:54	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(4/4) switched to RUNNING 
+03/20/2016 13:29:54	Sort-Partition(3/4) switched to SCHEDULED 
+03/20/2016 13:29:54	Sort-Partition(3/4) switched to DEPLOYING 
+03/20/2016 13:29:54	Sort-Partition(4/4) switched to SCHEDULED 
+03/20/2016 13:29:54	Sort-Partition(4/4) switched to DEPLOYING 
+03/20/2016 13:29:54	Sort-Partition(3/4) switched to RUNNING 
+03/20/2016 13:29:54	Sort-Partition(4/4) switched to RUNNING 
+03/20/2016 13:29:57	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(4/4) switched to SCHEDULED 
+03/20/2016 13:29:57	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(4/4) switched to DEPLOYING 
+03/20/2016 13:29:57	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(4/4) switched to RUNNING 
+03/20/2016 13:29:57	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(1/4) switched to SCHEDULED 
+03/20/2016 13:29:57	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(1/4) switched to DEPLOYING 
+03/20/2016 13:29:57	Map (Map at constructOSMStreams(ProcessOSM.java:115))(1/4) switched to SCHEDULED 
+03/20/2016 13:29:57	Map (Map at constructOSMStreams(ProcessOSM.java:115))(1/4) switched to DEPLOYING 
+03/20/2016 13:29:57	Map (Map at constructOSMStreams(ProcessOSM.java:115))(2/4) switched to SCHEDULED 
+03/20/2016 13:29:57	Map (Map at constructOSMStreams(ProcessOSM.java:115))(2/4) switched to DEPLOYING 
+03/20/2016 13:29:57	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(2/4) switched to SCHEDULED 
+03/20/2016 13:29:57	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(2/4) switched to DEPLOYING 
+03/20/2016 13:29:57	Sort-Partition(1/4) switched to SCHEDULED 
+03/20/2016 13:29:57	Sort-Partition(1/4) switched to DEPLOYING 
+03/20/2016 13:29:57	Sort-Partition(2/4) switched to SCHEDULED 
+03/20/2016 13:29:57	Sort-Partition(2/4) switched to DEPLOYING 
+03/20/2016 13:29:57	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(1/4) switched to RUNNING 
+03/20/2016 13:29:57	Map (Map at constructOSMStreams(ProcessOSM.java:115))(1/4) switched to RUNNING 
+03/20/2016 13:29:57	Map (Map at constructOSMStreams(ProcessOSM.java:115))(2/4) switched to RUNNING 
+03/20/2016 13:29:57	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(2/4) switched to RUNNING 
+03/20/2016 13:29:57	Sort-Partition(2/4) switched to RUNNING 
+03/20/2016 13:29:57	Sort-Partition(1/4) switched to RUNNING 
+03/20/2016 13:29:57	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(1/4) switched to SCHEDULED 
+03/20/2016 13:29:57	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(1/4) switched to DEPLOYING 
+03/20/2016 13:29:57	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(1/4) switched to RUNNING 
+03/20/2016 13:29:58	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(2/4) switched to SCHEDULED 
+03/20/2016 13:29:58	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(2/4) switched to DEPLOYING 
+03/20/2016 13:29:58	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(2/4) switched to RUNNING 
+03/20/2016 13:29:59	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(3/4) switched to SCHEDULED 
+03/20/2016 13:29:59	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(3/4) switched to DEPLOYING 
+03/20/2016 13:29:59	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(3/4) switched to RUNNING 
+03/20/2016 13:51:34	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(2/4) switched to FINISHED 
+03/20/2016 13:51:34	Map (Map at constructOSMStreams(ProcessOSM.java:115))(2/4) switched to FINISHED 
+03/20/2016 13:51:34	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(2/4) switched to FINISHED 
+03/20/2016 13:51:34	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(2/4) switched to FINISHED 
+03/20/2016 13:51:42	Join(Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to SCHEDULED 
+03/20/2016 13:51:42	Join(Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to DEPLOYING 
+03/20/2016 13:51:42	Join(Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to RUNNING 
+03/20/2016 13:53:04	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(2/4) switched to FINISHED 
+03/20/2016 13:55:22	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(2/4) switched to FINISHED 
+03/20/2016 14:05:34	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(4/4) switched to FINISHED 
+03/20/2016 14:05:34	Map (Map at constructOSMStreams(ProcessOSM.java:115))(4/4) switched to FINISHED 
+03/20/2016 14:05:34	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(4/4) switched to FINISHED 
+03/20/2016 14:05:34	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(4/4) switched to FINISHED 
+03/20/2016 14:05:42	Join(Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to SCHEDULED 
+03/20/2016 14:05:42	Join(Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to DEPLOYING 
+03/20/2016 14:05:42	Join(Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to RUNNING 
+03/20/2016 14:07:09	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(4/4) switched to FINISHED 
+03/20/2016 14:07:26	Map (Map at constructOSMStreams(ProcessOSM.java:115))(1/4) switched to FINISHED 
+03/20/2016 14:07:26	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(1/4) switched to FINISHED 
+03/20/2016 14:07:26	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(1/4) switched to FINISHED 
+03/20/2016 14:07:26	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(1/4) switched to FINISHED 
+03/20/2016 14:07:30	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:64)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:64))(3/4) switched to FINISHED 
+03/20/2016 14:07:30	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:123)) -> Map (Map at main(ProcessOSM.java:518))(3/4) switched to FINISHED 
+03/20/2016 14:07:30	DataSink (CsvOutputFormat (path: /home/ec2-user/france/nodes.csv, delimiter: ,))(3/4) switched to FINISHED 
+03/20/2016 14:07:30	Map (Map at constructOSMStreams(ProcessOSM.java:115))(3/4) switched to FINISHED 
+03/20/2016 14:07:39	Join(Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to SCHEDULED 
+03/20/2016 14:07:39	Join(Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to DEPLOYING 
+03/20/2016 14:07:39	Join(Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to RUNNING 
+03/20/2016 14:07:43	Join(Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to SCHEDULED 
+03/20/2016 14:07:43	Join(Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to DEPLOYING 
+03/20/2016 14:07:43	Join(Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to RUNNING 
+03/20/2016 14:08:19	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(1/4) switched to FINISHED 
+03/20/2016 14:08:36	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:80)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:80))(3/4) switched to FINISHED 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(2/4) switched to SCHEDULED 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(2/4) switched to DEPLOYING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(4/4) switched to SCHEDULED 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(4/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(1/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Map (Key Extractor 1)(1/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(2/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Map (Key Extractor 1)(2/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(3/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Map (Key Extractor 1)(3/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(4/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Map (Key Extractor 1)(4/4) switched to DEPLOYING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(3/4) switched to SCHEDULED 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(1/4) switched to SCHEDULED 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(3/4) switched to DEPLOYING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(1/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Sort-Partition(2/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Sort-Partition(2/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Sort-Partition(4/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Sort-Partition(4/4) switched to DEPLOYING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(2/4) switched to RUNNING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(4/4) switched to RUNNING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(3/4) switched to RUNNING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(1/4) switched to RUNNING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(2/4) switched to SCHEDULED 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(3/4) switched to SCHEDULED 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(1/4) switched to SCHEDULED 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(4/4) switched to SCHEDULED 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(3/4) switched to DEPLOYING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(2/4) switched to DEPLOYING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(4/4) switched to DEPLOYING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(1/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Sort-Partition(3/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Sort-Partition(3/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(2/4) switched to RUNNING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(1/4) switched to RUNNING 
+03/20/2016 14:08:36	Sort-Partition(2/4) switched to RUNNING 
+03/20/2016 14:08:36	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(3/4) switched to RUNNING 
+03/20/2016 14:08:36	Map (Key Extractor 1)(4/4) switched to RUNNING 
+03/20/2016 14:08:36	Sort-Partition(1/4) switched to SCHEDULED 
+03/20/2016 14:08:36	Sort-Partition(1/4) switched to DEPLOYING 
+03/20/2016 14:08:36	Sort-Partition(4/4) switched to RUNNING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(4/4) switched to RUNNING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(1/4) switched to RUNNING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(2/4) switched to RUNNING 
+03/20/2016 14:08:36	Sort-Partition(3/4) switched to RUNNING 
+03/20/2016 14:08:36	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(3/4) switched to RUNNING 
+03/20/2016 14:08:37	Sort-Partition(1/4) switched to RUNNING 
+03/20/2016 14:09:56	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(4/4) switched to FINISHED 
+03/20/2016 14:11:14	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(1/4) switched to FINISHED 
+03/20/2016 14:11:47	CHAIN Map (Map at constructOSMStreams(ProcessOSM.java:97)) -> Filter (Filter at constructOSMStreams(ProcessOSM.java:97))(3/4) switched to FINISHED 
+03/20/2016 14:11:47	Map (Key Extractor 1)(1/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Map (Key Extractor 1)(1/4) switched to DEPLOYING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(1/4) switched to SCHEDULED 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(1/4) switched to DEPLOYING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(2/4) switched to SCHEDULED 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(2/4) switched to DEPLOYING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(3/4) switched to SCHEDULED 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(3/4) switched to DEPLOYING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(4/4) switched to SCHEDULED 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(4/4) switched to DEPLOYING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(1/4) switched to SCHEDULED 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(1/4) switched to DEPLOYING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(2/4) switched to SCHEDULED 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(2/4) switched to DEPLOYING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(3/4) switched to SCHEDULED 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(3/4) switched to DEPLOYING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(4/4) switched to SCHEDULED 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(4/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(3/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Map (Key Extractor 1)(4/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Map (Key Extractor 1)(4/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(3/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(2/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(3/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(2/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(3/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(4/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(4/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(1/4) switched to SCHEDULED 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(1/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(2/4) switched to DEPLOYING 
+03/20/2016 14:11:47	Join (Join at constructOSMStreams(ProcessOSM.java:322))(2/4) switched to DEPLOYING 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(1/4) switched to SCHEDULED 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(1/4) switched to DEPLOYING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(1/4) switched to RUNNING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(1/4) switched to RUNNING 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(4/4) switched to SCHEDULED 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(4/4) switched to DEPLOYING 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(3/4) switched to SCHEDULED 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(3/4) switched to DEPLOYING 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(2/4) switched to SCHEDULED 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(2/4) switched to DEPLOYING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(2/4) switched to RUNNING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(3/4) switched to RUNNING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(2/4) switched to RUNNING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(3/4) switched to RUNNING 
+03/20/2016 14:11:47	Map (Key Extractor 1)(4/4) switched to RUNNING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(3/4) switched to RUNNING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(4/4) switched to RUNNING 
+03/20/2016 14:11:47	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(4/4) switched to RUNNING 
+03/20/2016 14:11:47	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(1/4) switched to RUNNING 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(3/4) switched to RUNNING 
+03/20/2016 14:11:47	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(4/4) switched to RUNNING 
+03/20/2016 14:11:48	Join (Join at constructOSMStreams(ProcessOSM.java:322))(1/4) switched to RUNNING 
+03/20/2016 14:11:48	Map (Key Extractor 1)(2/4) switched to RUNNING 
+03/20/2016 14:11:48	Join (Join at constructOSMStreams(ProcessOSM.java:322))(4/4) switched to RUNNING 
+03/20/2016 14:11:48	Join (Join at constructOSMStreams(ProcessOSM.java:322))(3/4) switched to RUNNING 
+03/20/2016 14:11:48	Join (Join at constructOSMStreams(ProcessOSM.java:322))(2/4) switched to RUNNING 
+03/20/2016 14:11:48	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(1/4) switched to RUNNING 
+03/20/2016 14:11:48	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(2/4) switched to RUNNING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to SCHEDULED 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to DEPLOYING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to SCHEDULED 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to DEPLOYING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to SCHEDULED 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to DEPLOYING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to SCHEDULED 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to DEPLOYING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to RUNNING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to RUNNING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to RUNNING 
+03/20/2016 14:11:54	Join (Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to RUNNING 
+03/20/2016 14:14:06	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(2/4) switched to FINISHED 
+03/20/2016 14:17:47	Sort-Partition(2/4) switched to FINISHED 
+03/20/2016 14:19:17	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(4/4) switched to FINISHED 
+03/20/2016 14:19:34	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(1/4) switched to FINISHED 
+03/20/2016 14:19:42	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:132))(3/4) switched to FINISHED 
+03/20/2016 14:24:08	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(2/4) switched to FINISHED 
+03/20/2016 14:24:08	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(2/4) switched to FINISHED 
+03/20/2016 14:27:02	Sort-Partition(1/4) switched to FINISHED 
+03/20/2016 14:27:09	Sort-Partition(4/4) switched to FINISHED 
+03/20/2016 14:27:29	Sort-Partition(3/4) switched to FINISHED 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(2/4) switched to SCHEDULED 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(2/4) switched to DEPLOYING 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(3/4) switched to SCHEDULED 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(3/4) switched to DEPLOYING 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(4/4) switched to SCHEDULED 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(4/4) switched to DEPLOYING 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(1/4) switched to SCHEDULED 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(1/4) switched to DEPLOYING 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(4/4) switched to RUNNING 
+03/20/2016 14:27:30	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(3/4) switched to RUNNING 
+03/20/2016 14:27:31	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(1/4) switched to RUNNING 
+03/20/2016 14:27:31	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(2/4) switched to RUNNING 
+03/20/2016 14:29:19	Sort-Partition(2/4) switched to FINISHED 
+03/20/2016 14:30:32	Sort-Partition(4/4) switched to FINISHED 
+03/20/2016 14:30:39	Sort-Partition(3/4) switched to FINISHED 
+03/20/2016 14:30:40	Sort-Partition(1/4) switched to FINISHED 
+03/20/2016 14:31:40	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(4/4) switched to FINISHED 
+03/20/2016 14:31:40	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(4/4) switched to FINISHED 
+03/20/2016 14:32:23	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(3/4) switched to FINISHED 
+03/20/2016 14:32:23	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(3/4) switched to FINISHED 
+03/20/2016 14:33:58	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:241)) -> Map (Map at main(ProcessOSM.java:542))(1/4) switched to FINISHED 
+03/20/2016 14:33:58	DataSink (CsvOutputFormat (path: /home/ec2-user/france/rels.csv, delimiter: ,))(1/4) switched to FINISHED 
+03/20/2016 14:40:06	Join(Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to FINISHED 
+03/20/2016 14:43:09	Join(Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to FINISHED 
+03/20/2016 14:43:18	Join(Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to FINISHED 
+03/20/2016 14:43:21	Join(Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to FINISHED 
+03/20/2016 14:48:02	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(3/4) switched to FINISHED 
+03/20/2016 14:48:05	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(1/4) switched to FINISHED 
+03/20/2016 14:48:05	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(2/4) switched to FINISHED 
+03/20/2016 14:48:06	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:153))(4/4) switched to FINISHED 
+03/20/2016 14:54:21	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(3/4) switched to SCHEDULED 
+03/20/2016 14:54:21	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(3/4) switched to DEPLOYING 
+03/20/2016 14:54:21	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(3/4) switched to SCHEDULED 
+03/20/2016 14:54:21	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(3/4) switched to DEPLOYING 
+03/20/2016 14:54:21	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(3/4) switched to RUNNING 
+03/20/2016 14:54:22	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(3/4) switched to RUNNING 
+03/20/2016 14:54:22	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(3/4) switched to SCHEDULED 
+03/20/2016 14:54:22	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(3/4) switched to DEPLOYING 
+03/20/2016 14:54:22	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(3/4) switched to RUNNING 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(2/4) switched to SCHEDULED 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(1/4) switched to SCHEDULED 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(2/4) switched to DEPLOYING 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(1/4) switched to DEPLOYING 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(4/4) switched to SCHEDULED 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(4/4) switched to DEPLOYING 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(3/4) switched to SCHEDULED 
+03/20/2016 14:54:22	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(3/4) switched to DEPLOYING 
+03/20/2016 14:54:23	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(2/4) switched to RUNNING 
+03/20/2016 14:54:23	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(4/4) switched to RUNNING 
+03/20/2016 14:54:23	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(3/4) switched to RUNNING 
+03/20/2016 14:54:23	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(1/4) switched to RUNNING 
+03/20/2016 14:54:24	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(1/4) switched to SCHEDULED 
+03/20/2016 14:54:24	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(1/4) switched to SCHEDULED 
+03/20/2016 14:54:24	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(1/4) switched to DEPLOYING 
+03/20/2016 14:54:24	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(1/4) switched to DEPLOYING 
+03/20/2016 14:54:24	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(1/4) switched to RUNNING 
+03/20/2016 14:54:24	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(1/4) switched to RUNNING 
+03/20/2016 14:54:24	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(1/4) switched to SCHEDULED 
+03/20/2016 14:54:24	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(1/4) switched to DEPLOYING 
+03/20/2016 14:54:24	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(1/4) switched to RUNNING 
+03/20/2016 14:54:25	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(2/4) switched to SCHEDULED 
+03/20/2016 14:54:25	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(2/4) switched to DEPLOYING 
+03/20/2016 14:54:25	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(2/4) switched to SCHEDULED 
+03/20/2016 14:54:25	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(2/4) switched to DEPLOYING 
+03/20/2016 14:54:25	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(2/4) switched to RUNNING 
+03/20/2016 14:54:25	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(2/4) switched to RUNNING 
+03/20/2016 14:54:25	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(2/4) switched to SCHEDULED 
+03/20/2016 14:54:25	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(2/4) switched to DEPLOYING 
+03/20/2016 14:54:25	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(2/4) switched to RUNNING 
+03/20/2016 14:54:25	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(4/4) switched to SCHEDULED 
+03/20/2016 14:54:25	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(4/4) switched to DEPLOYING 
+03/20/2016 14:54:25	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(4/4) switched to SCHEDULED 
+03/20/2016 14:54:25	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(4/4) switched to DEPLOYING 
+03/20/2016 14:54:25	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(4/4) switched to RUNNING 
+03/20/2016 14:54:25	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(4/4) switched to RUNNING 
+03/20/2016 14:54:25	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(4/4) switched to SCHEDULED 
+03/20/2016 14:54:25	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(4/4) switched to DEPLOYING 
+03/20/2016 14:54:25	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(4/4) switched to RUNNING 
+03/20/2016 14:55:38	Map (Map at main(ProcessOSM.java:525))(2/4) switched to SCHEDULED 
+03/20/2016 14:55:38	Map (Map at main(ProcessOSM.java:525))(2/4) switched to DEPLOYING 
+03/20/2016 14:55:38	Map (Map at main(ProcessOSM.java:525))(2/4) switched to RUNNING 
+03/20/2016 14:55:38	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(2/4) switched to SCHEDULED 
+03/20/2016 14:55:38	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(2/4) switched to DEPLOYING 
+03/20/2016 14:55:38	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(2/4) switched to RUNNING 
+03/20/2016 14:55:48	Map (Map at main(ProcessOSM.java:525))(3/4) switched to SCHEDULED 
+03/20/2016 14:55:48	Map (Map at main(ProcessOSM.java:525))(3/4) switched to DEPLOYING 
+03/20/2016 14:55:48	Map (Map at main(ProcessOSM.java:525))(3/4) switched to RUNNING 
+03/20/2016 14:55:48	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(3/4) switched to SCHEDULED 
+03/20/2016 14:55:48	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(3/4) switched to DEPLOYING 
+03/20/2016 14:55:48	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(3/4) switched to RUNNING 
+03/20/2016 14:55:49	Map (Map at main(ProcessOSM.java:525))(4/4) switched to SCHEDULED 
+03/20/2016 14:55:49	Map (Map at main(ProcessOSM.java:525))(4/4) switched to DEPLOYING 
+03/20/2016 14:55:49	Map (Map at main(ProcessOSM.java:525))(4/4) switched to RUNNING 
+03/20/2016 14:55:49	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(4/4) switched to SCHEDULED 
+03/20/2016 14:55:49	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(4/4) switched to DEPLOYING 
+03/20/2016 14:55:49	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(4/4) switched to RUNNING 
+03/20/2016 14:56:12	Map (Map at main(ProcessOSM.java:525))(1/4) switched to SCHEDULED 
+03/20/2016 14:56:12	Map (Map at main(ProcessOSM.java:525))(1/4) switched to DEPLOYING 
+03/20/2016 14:56:12	Map (Map at main(ProcessOSM.java:525))(1/4) switched to RUNNING 
+03/20/2016 14:56:12	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(1/4) switched to SCHEDULED 
+03/20/2016 14:56:12	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(1/4) switched to DEPLOYING 
+03/20/2016 14:56:12	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(1/4) switched to RUNNING 
+03/20/2016 14:58:29	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(2/4) switched to FINISHED 
+03/20/2016 15:00:18	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(1/4) switched to FINISHED 
+03/20/2016 15:00:53	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(4/4) switched to FINISHED 
+03/20/2016 15:00:58	Map (Key Extractor 1)(2/4) switched to FINISHED 
+03/20/2016 15:01:34	FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:260))(3/4) switched to FINISHED 
+03/20/2016 15:04:13	Map (Key Extractor 1)(4/4) switched to FINISHED 
+03/20/2016 15:04:20	Map (Key Extractor 1)(1/4) switched to FINISHED 
+03/20/2016 15:04:30	Map (Key Extractor 1)(3/4) switched to FINISHED 
+03/20/2016 15:04:45	Join (Join at projectTupleX(JoinOperator.java:1295))(4/4) switched to FINISHED 
+03/20/2016 15:04:47	Join (Join at projectTupleX(JoinOperator.java:1295))(3/4) switched to FINISHED 
+03/20/2016 15:04:48	Join (Join at projectTupleX(JoinOperator.java:1295))(2/4) switched to FINISHED 
+03/20/2016 15:04:48	Join (Join at projectTupleX(JoinOperator.java:1295))(1/4) switched to FINISHED 
+03/20/2016 15:05:12	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(1/4) switched to FINISHED 
+03/20/2016 15:05:12	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(4/4) switched to FINISHED 
+03/20/2016 15:05:13	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(3/4) switched to FINISHED 
+03/20/2016 15:05:13	GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:289))(2/4) switched to FINISHED 
+03/20/2016 15:15:42	Map (Key Extractor 1)(2/4) switched to FINISHED 
+03/20/2016 15:22:30	Map (Key Extractor 1)(4/4) switched to FINISHED 
+03/20/2016 15:22:55	Map (Key Extractor 1)(1/4) switched to FINISHED 
+03/20/2016 15:23:20	Map (Key Extractor 1)(3/4) switched to FINISHED 
+03/20/2016 15:25:32	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(1/4) switched to FINISHED 
+03/20/2016 15:25:32	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(1/4) switched to FINISHED 
+03/20/2016 15:25:32	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(1/4) switched to FINISHED 
+03/20/2016 15:25:32	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(1/4) switched to FINISHED 
+03/20/2016 15:25:38	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(2/4) switched to FINISHED 
+03/20/2016 15:25:38	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(2/4) switched to FINISHED 
+03/20/2016 15:25:38	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(2/4) switched to FINISHED 
+03/20/2016 15:25:38	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(2/4) switched to FINISHED 
+03/20/2016 15:25:40	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(3/4) switched to FINISHED 
+03/20/2016 15:25:40	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(3/4) switched to FINISHED 
+03/20/2016 15:25:40	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(3/4) switched to FINISHED 
+03/20/2016 15:25:40	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(3/4) switched to FINISHED 
+03/20/2016 15:25:41	CHAIN Join (Join at constructOSMStreams(ProcessOSM.java:187)) -> Map (Map at constructOSMStreams(ProcessOSM.java:218))(4/4) switched to FINISHED 
+03/20/2016 15:25:41	Filter (Filter at constructOSMStreams(ProcessOSM.java:341))(4/4) switched to FINISHED 
+03/20/2016 15:25:41	CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:354)) -> Map (Map at main(ProcessOSM.java:533))(4/4) switched to FINISHED 
+03/20/2016 15:25:41	DataSink (CsvOutputFormat (path: /home/ec2-user/france/ways.csv, delimiter: ,))(4/4) switched to FINISHED 
+03/20/2016 15:26:15	Map (Map at main(ProcessOSM.java:525))(2/4) switched to FINISHED 
+03/20/2016 15:26:15	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(2/4) switched to FINISHED 
+03/20/2016 15:26:15	Join (Join at constructOSMStreams(ProcessOSM.java:322))(2/4) switched to FINISHED 
+03/20/2016 15:26:15	Join (Join at constructOSMStreams(ProcessOSM.java:322))(3/4) switched to FINISHED 
+03/20/2016 15:26:15	Map (Map at main(ProcessOSM.java:525))(3/4) switched to FINISHED 
+03/20/2016 15:26:15	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(3/4) switched to FINISHED 
+03/20/2016 15:26:17	Join (Join at constructOSMStreams(ProcessOSM.java:322))(4/4) switched to FINISHED 
+03/20/2016 15:26:17	Map (Map at main(ProcessOSM.java:525))(4/4) switched to FINISHED 
+03/20/2016 15:26:17	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(4/4) switched to FINISHED 
+03/20/2016 15:26:17	Join (Join at constructOSMStreams(ProcessOSM.java:322))(1/4) switched to FINISHED 
+03/20/2016 15:26:17	Map (Map at main(ProcessOSM.java:525))(1/4) switched to FINISHED 
+03/20/2016 15:26:17	DataSink (CsvOutputFormat (path: /home/ec2-user/france/polygons.csv, delimiter: ,))(1/4) switched to FINISHED 
+03/20/2016 15:26:17	Job execution switched to status FINISHED.

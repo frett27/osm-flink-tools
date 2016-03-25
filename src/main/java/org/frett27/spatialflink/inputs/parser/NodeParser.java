@@ -46,7 +46,7 @@ public class NodeParser extends Parser<NodeEntity> {
 			lastLat += denseNodes.getLat(i);
 			lastLon += denseNodes.getLon(i);
 
-			Map<String, Object> flds = null;
+			Map<String, String> flds = null;
 
 			try {
 				if (denseNodes.getKeysValsCount() > 0) {
@@ -66,7 +66,7 @@ public class NodeParser extends Parser<NodeEntity> {
 							System.out.println("error in encoding");
 
 						if (flds == null) {
-							flds = new HashMap<String, Object>();
+							flds = new HashMap<String, String>();
 						}
 
 						flds.put(k, v);
@@ -114,14 +114,14 @@ public class NodeParser extends Parser<NodeEntity> {
 		}
 
 		private NodeEntity constructNode(Node n) {
-			Map<String, Object> fields = null;
+			Map<String, String> fields = null;
 
 			for (int i = 0; i < n.getKeysCount(); i++) {
 				int keys = n.getKeys(i);
 				String k = ctx.getStringById(keys);
 				String v = ctx.getStringById(n.getVals(i));
 				if (fields == null) {
-					fields = new HashMap<String, Object>();
+					fields = new HashMap<String, String>();
 				}
 				fields.put(k, v);
 			}

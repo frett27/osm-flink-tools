@@ -8,6 +8,6 @@ public class AttributedEntity  {
 
 	public long id;
 
-	public Map<String, Object> fields;
+	public Map<String, String> fields;
 
 }

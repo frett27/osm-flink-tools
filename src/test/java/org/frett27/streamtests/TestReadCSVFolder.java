@@ -22,11 +22,12 @@ public class TestReadCSVFolder {
 		OSMResultsStreams s = ProcessOSM.constructOSMStreamsFromFolder(env,
 				new File("C:\\projets\\Hydrant_Spatial_Analysis\\dev\\Analysis\\processedData"));
 
-		//System.out.println(s.retNodesWithAttributes.first(10).collect());
+		System.out.println(s.retNodesWithAttributes.first(10).collect());
 		System.out.println(s.retPolygons.first(10).collect());
-		// System.out.println(s.retWaysEntities.first(10).collect());
-		//System.out.println(s.retRelations.first(10).collect());
+	    System.out.println(s.retWaysEntities.first(10).collect());
+		System.out.println(s.retRelations.first(10).collect());
 		
+		env.execute();
 
 	}
 

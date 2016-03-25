@@ -45,12 +45,12 @@ public class RelationParser extends Parser<Relation> {
 
 			long id = r.getId();
 
-			HashMap<String, Object> flds = null;
+			HashMap<String, String> flds = null;
 			for (int i = 0; i < r.getKeysCount(); i++) {
 				String k = ctx.getStringById(r.getKeys(i));
 				String v = ctx.getStringById(r.getVals(i));
 				if (flds == null) {
-					flds = new HashMap<String, Object>();
+					flds = new HashMap<String, String>();
 				}
 				flds.put(k, v);
 			}

@@ -22,6 +22,9 @@ import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 import org.apache.flink.util.Collector;
 import org.frett27.spatialflink.inputs.OSMPBFAllEntities;
+import org.frett27.spatialflink.inputs.OSMPBFNodeInputFormat;
+import org.frett27.spatialflink.inputs.OSMPBFRelationInputFormat;
+import org.frett27.spatialflink.inputs.OSMPBFWayInputFormat;
 import org.frett27.spatialflink.model.AttributedEntity;
 import org.frett27.spatialflink.model.ComplexEntity;
 import org.frett27.spatialflink.model.NodeEntity;
@@ -54,62 +57,19 @@ public class ProcessOSM {
 
 	public static OSMResultsStreams constructOSMStreams(ExecutionEnvironment env, String inputFile) throws Exception {
 
-		OSMPBFAllEntities iallformat = new OSMPBFAllEntities();
-		iallformat.setFilePath(inputFile);
+		
+		OSMPBFNodeInputFormat iNodes = new OSMPBFNodeInputFormat();
+		iNodes.setFilePath(inputFile);
+		DataSet<NodeEntity> nodes = env.createInput(iNodes,  new GenericTypeInfo<NodeEntity>(NodeEntity.class));
+		
+		OSMPBFWayInputFormat iWays = new OSMPBFWayInputFormat();
+		iWays.setFilePath(inputFile);
+		DataSet<WayEntity> ways = env.createInput(iWays,  new GenericTypeInfo<WayEntity>(WayEntity.class));
+		
+		OSMPBFRelationInputFormat iRelation = new OSMPBFRelationInputFormat();
+		iRelation.setFilePath(inputFile);
+		DataSet<Relation> rels = env.createInput(iRelation,  new GenericTypeInfo<Relation>(Relation.class));
 
-		DataSet<AttributedEntity> allEntitiesAttributed = env.createInput(iallformat,
-				new GenericTypeInfo<AttributedEntity>(AttributedEntity.class));
-
-		// nodes
-		DataSet<NodeEntity> nodes = allEntitiesAttributed.map(new MapFunction<AttributedEntity, NodeEntity>() {
-			@Override
-			public NodeEntity map(AttributedEntity value) throws Exception {
-				if (value instanceof NodeEntity)
-					return (NodeEntity) value;
-
-				return null;
-			}
-		}).filter(new FilterFunction<NodeEntity>() {
-			@Override
-			public boolean filter(NodeEntity value) throws Exception {
-				return value != null;
-			}
-		});
-
-		// ways
-		DataSet<WayEntity> ways = allEntitiesAttributed
-
-		.map(new MapFunction<AttributedEntity, WayEntity>() {
-			@Override
-			public WayEntity map(AttributedEntity value) throws Exception {
-				if (value instanceof WayEntity)
-					return (WayEntity) value;
-
-				return null;
-			}
-		}).filter(new FilterFunction<WayEntity>() {
-			@Override
-			public boolean filter(WayEntity value) throws Exception {
-				return value != null;
-			}
-		});
-
-		DataSet<Relation> rels = allEntitiesAttributed
-
-		.map(new MapFunction<AttributedEntity, Relation>() {
-			@Override
-			public Relation map(AttributedEntity value) throws Exception {
-				if (value instanceof Relation)
-					return (Relation) value;
-
-				return null;
-			}
-		}).filter(new FilterFunction<Relation>() {
-			@Override
-			public boolean filter(Relation value) throws Exception {
-				return value != null;
-			}
-		});
 
 		// get only the positions of the nodes
 		DataSet<Tuple3<Long, Double, Double>> onlypos = nodes
@@ -401,7 +361,9 @@ public class ProcessOSM {
 
 
 		DataSet<Tuple3<Long, String, String>> polygonsDataset = 
-				env.readCsvFile(polygons.getAbsolutePath()).types(Long.class, String.class, String.class); 
+				env.readCsvFile(polygons.getAbsolutePath())
+				.ignoreInvalidLines()
+				.types(Long.class, String.class, String.class); 
 
 		DataSet<ComplexEntity> polygonsStream = polygonsDataset
 				.map(new MapFunction<Tuple3<Long, String, String>, ComplexEntity>() {
@@ -452,7 +414,7 @@ public class ProcessOSM {
 					String[] elements = value.f2.split("||");
 					for (String s : elements) {
 
-						Map<String, Object> h = MapStringTools.fromString(s);
+						Map<String, String> h = MapStringTools.fromString(s);
 						RelatedObject ro = new RelatedObject();
 
 						// h.put("relid", r.relatedId);
@@ -547,8 +509,8 @@ public class ProcessOSM {
 				if (value.relatedObjects != null) {
 
 					for (RelatedObject r : value.relatedObjects) {
-						HashMap<String, Object> h = new HashMap<>();
-						h.put("relid", r.relatedId);
+						HashMap<String, String> h = new HashMap<>();
+						h.put("relid", Long.toString( r.relatedId));
 						h.put("role", r.role);
 						h.put("type", r.type);
 						if (sb.length() > 0) {

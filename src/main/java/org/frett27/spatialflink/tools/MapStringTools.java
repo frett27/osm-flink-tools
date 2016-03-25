@@ -6,12 +6,12 @@ import java.util.Map.Entry;
 
 public class MapStringTools {
 
-	public static String convertToString(Map<String, Object> attributes) {
+	public static String convertToString(Map<String, String> attributes) {
 		if (attributes == null)
 			return "";
 	
 		StringBuilder sb = new StringBuilder();
-		for (Entry<String, Object> e : attributes.entrySet()) {
+		for (Entry<String, String> e : attributes.entrySet()) {
 			if (sb.length() > 0)
 				sb.append('|');
 			sb.append(e.getKey()).append("=").append(e.getValue() == null ? "" : e.getValue());
@@ -19,14 +19,14 @@ public class MapStringTools {
 		return sb.toString();
 	}
 
-	public static Map<String, Object> fromString(String fieldsValuePairs) {
+	public static Map<String, String> fromString(String fieldsValuePairs) {
 		if (fieldsValuePairs == null)
 			return null;
 	
 		if (fieldsValuePairs.trim().isEmpty())
 			return null;
 	
-		Map<String, Object> fields = new HashMap<>();
+		Map<String, String> fields = new HashMap<>();
 	
 		String[] pairs = fieldsValuePairs.split("|");
 		for (String s : pairs) {
@@ -43,7 +43,7 @@ public class MapStringTools {
 	
 		}
 	
-		return (Map<String, Object>) fields;
+		return  fields;
 	
 	}
 

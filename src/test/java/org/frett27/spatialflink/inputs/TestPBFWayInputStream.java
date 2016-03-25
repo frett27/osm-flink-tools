@@ -8,6 +8,7 @@ import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 import org.apache.flink.core.fs.FileInputSplit;
 import org.apache.flink.util.Collector;
 import org.frett27.spatialflink.model.Relation;
+import org.frett27.spatialflink.model.WayEntity;
 
 public class TestPBFWayInputStream {
 
@@ -26,10 +27,10 @@ public class TestPBFWayInputStream {
 
 		FileInputSplit[] s = iformat.createInputSplits(4);
 
-		DataSource<Relation> r = env.createInput(iformat, new GenericTypeInfo<Relation>(Relation.class));
-		r.flatMap(new FlatMapFunction<Relation, Tuple2<Long, String>>() {
+		DataSource<WayEntity> r = env.createInput(iformat, new GenericTypeInfo<WayEntity>(WayEntity.class));
+		r.flatMap(new FlatMapFunction<WayEntity, Tuple2<Long, String>>() {
 			@Override
-			public void flatMap(Relation value, Collector<Tuple2<Long, String>> out)
+			public void flatMap(WayEntity value, Collector<Tuple2<Long, String>> out)
 					throws Exception {
 				if (value.fields != null) {
 					if (value.fields.containsKey("type")) {

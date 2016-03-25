@@ -67,13 +67,13 @@ public class WayParser extends Parser<WayEntity> {
 				rels.add(relo);
 			}
 
-			Map<String, Object> flds = null;
+			Map<String, String> flds = null;
 
 			for (int i = 0; i < w.getKeysCount(); i++) {
 				String k = ctx.getStringById(w.getKeys(i));
 				String v = ctx.getStringById(w.getVals(i));
 				if (flds == null) {
-					flds = new HashMap<String, Object>();
+					flds = new HashMap<String, String>();
 				}
 				flds.put(k, v);
 			}
