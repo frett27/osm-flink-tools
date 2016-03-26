@@ -29,8 +29,8 @@ repositories {
     mavenLocal()
 }
 
-//def flinkversion = "0.10.1"
-def flinkversion = "1.0.0"
+def flinkversion = "0.10.1"
+//def flinkversion = "1.0.0"
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
