@@ -21,38 +21,6 @@ public class PolygonCreator {
 
 	public static Logger logger = LoggerFactory.getLogger(PolygonCreator.class);
 
-
-	public static enum Role {
-		OUTER, INNER
-	}
-
-	
-	public static class MultiPathAndRole {
-
-		private MultiPath multiPath;
-		private Role role;
-
-		public MultiPathAndRole(MultiPath p, Role r) {
-			this.multiPath = p;
-			this.role = r;
-		}
-
-		public Role getRole() {
-			return role;
-		}
-
-		public MultiPath getMultiPath() {
-			return multiPath;
-		}
-
-		@Override
-		public String toString() {
-			StringBuffer sb = firstAndLastPoints(role.toString(), multiPath);
-
-			return sb.toString();
-		}
-	}
-
 	private static String dump(List<MultiPathAndRole> l) {
 		if (l == null)
 			return null;
@@ -95,9 +63,21 @@ public class PolygonCreator {
 	 */
 	public static Polygon createPolygon(MultiPath[] multiPath, Role[] roles)
 			throws Exception {
+		return createPolygon(multiPath, roles, null);
+	}
 
-		return createPolygon(create(multiPath, roles));
-
+	/**
+	 * create polygon, and use report object to report errors
+	 * 
+	 * @param multiPath
+	 * @param roles
+	 * @param reporter
+	 * @return
+	 * @throws Exception
+	 */
+	public static Polygon createPolygon(MultiPath[] multiPath, Role[] roles,
+			IInvalidPolygonConstructionFeedBack reporter) throws Exception {
+		return createPolygon(create(multiPath, roles), reporter);
 	}
 
 	/**
@@ -109,7 +89,8 @@ public class PolygonCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Polygon createPolygon(List<MultiPathAndRole> pathLeft)
+	public static Polygon createPolygon(final List<MultiPathAndRole> pathLeft,
+			IInvalidPolygonConstructionFeedBack optionalReport)
 			throws Exception {
 
 		logger.debug("start create Polygon");
@@ -194,7 +175,7 @@ public class PolygonCreator {
 							+ joinPoint);
 
 				MultiPath followingPathWithCorrectOrder = findExtremisAndIfEndPointReverseTheMultiPath(
-						pathLeft, joinPoint, current.getRole()); // search for
+						pathLeft, joinPoint, current.role); // search for
 																	// the
 																	// next
 				if (logger.isDebugEnabled()) {
@@ -238,9 +219,11 @@ public class PolygonCreator {
 						sb.append("{ \"geometry\" :");
 						sb.append(
 								GeometryEngine.geometryToJson(4623,
-										originalList.get(i).multiPath)).append(",");
-						sb.append(" \"role\": ").append('"').append(originalList.get(i).role)
-								.append('"').append("}");
+										originalList.get(i).multiPath)).append(
+								",");
+						sb.append(" \"role\": ").append('"')
+								.append(originalList.get(i).role).append('"')
+								.append("}");
 						first = false;
 
 					}
@@ -268,9 +251,21 @@ public class PolygonCreator {
 					sb.append("]");
 					sb.append("}");
 
-//					System.out.println("fail to construct poly :"
-//							+ sb.toString());
+					System.out.println("fail to construct poly :"
+							+ sb.toString());
 
+					if (optionalReport != null) {
+						try {
+							// call the reporting object
+							optionalReport.polygonCreationFeedBackReport(
+									originalList, sb.toString());
+						} catch (Throwable t) {
+							// silent exception
+							logger.error(
+									"error in reporting : " + t.getMessage(), t);
+						}
+					}
+					// raise exception for polygon construct
 					throw new Exception("path cannot be closed");
 				}
 
@@ -313,6 +308,21 @@ public class PolygonCreator {
 
 	}
 
+	/**
+	 * create a polygon from multi path elements, passed arrays must have the
+	 * same number of elements
+	 * 
+	 * @param multiPath
+	 * @param roles
+	 * @return
+	 * @throws Exception
+	 */
+	public static Polygon createPolygon(final List<MultiPathAndRole> pathLeft)
+			throws Exception {
+		// call the method with no report
+		return createPolygon(pathLeft, null);
+	}
+
 	public static boolean isClosed(MultiPath p) {
 		assert p != null;
 		int start = p.getPathStart(0);
@@ -330,7 +340,7 @@ public class PolygonCreator {
 
 			MultiPathAndRole e = left.get(i);
 
-			if (e.getRole() != searchRole)
+			if (e.getRole() != searchRole && e.getRole() != Role.UNDEFINED)
 				continue;
 
 			MultiPath p = e.getMultiPath();
@@ -367,7 +377,7 @@ public class PolygonCreator {
 
 			MultiPathAndRole e = left.get(i);
 
-			if (e.getRole() != searchRole)
+			if (e.getRole() != searchRole && e.getRole() != Role.UNDEFINED)
 				continue;
 
 			MultiPath p = e.getMultiPath();
@@ -463,8 +473,7 @@ public class PolygonCreator {
 		System.out.println(jsong);
 	}
 
-	private static StringBuffer firstAndLastPoints(String role,
-			MultiPath multiPath) {
+	static StringBuffer firstAndLastPoints(String role, MultiPath multiPath) {
 		StringBuffer sb = new StringBuffer();
 		if (role != null) {
 			sb.append("(")

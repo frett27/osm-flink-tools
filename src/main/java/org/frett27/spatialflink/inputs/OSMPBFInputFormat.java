@@ -17,7 +17,6 @@ import org.apache.flink.core.fs.FileInputSplit;
 import org.apache.flink.core.fs.FileStatus;
 import org.apache.flink.core.fs.FileSystem;
 import org.apache.flink.core.fs.Path;
-import org.frett27.spatialflink.inputs.parser.NodeParser;
 import org.frett27.spatialflink.inputs.parser.Parser;
 import org.frett27.spatialflink.model.AttributedEntity;
 import org.frett27.spatialflink.model.NodeEntity;
