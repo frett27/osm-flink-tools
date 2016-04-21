@@ -226,10 +226,13 @@ public class ProcessOSM {
 
 							int c = 0;
 							for (RelatedObject r : value.relatedObjects) {
-								if (("inner".equals(r.role) || "outer".equals(r.role)) && "way".equals(r.type)) {
-									Role role = Role.OUTER;
+								
+								if ("way".equals(r.type)) {
+									Role role = Role.UNDEFINED;
 									if ("inner".equals(r.role)) {
 										role = Role.INNER;
+									} else if ("outer".equals(r.role)) {
+										role = Role.OUTER;
 									}
 									out.collect(new Tuple4<>(value.id, r.relatedId, c++, role));
 								}
