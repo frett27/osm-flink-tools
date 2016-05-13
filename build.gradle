@@ -34,19 +34,17 @@ repositories {
     mavenLocal()
 }
 
-def flinkversion = "0.10.1"
+// def flinkversion = "0.10.1"
 
-//def flinkversion = "1.0.0"
+def flinkversion = "1.0.3"
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile files('externallibs/osmpbf-1.3.3.jar')	
     compile 'com.esri.geometry:esri-geometry-api:1.2.1'
 	compile "org.apache.flink:flink-java:${flinkversion}"
-	compile "org.apache.flink:flink-core:${flinkversion}"
-	compile "org.apache.flink:flink-runtime:${flinkversion}"
-    compile "org.apache.flink:flink-clients:${flinkversion}"
-    compile "org.apache.flink:flink-hadoop-compatibility:${flinkversion}"
+    compile "org.apache.flink:flink-clients_2.10:${flinkversion}"
+    // compile "org.apache.flink:flink-hadoop-compatibility:${flinkversion}"
 
     testCompile "junit:junit:4.11"
 }

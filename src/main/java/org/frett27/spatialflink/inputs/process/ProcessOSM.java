@@ -11,6 +11,7 @@ import org.apache.flink.api.common.functions.FlatJoinFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.JoinFunction;
+import org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHint;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.operators.Order;
 import org.apache.flink.api.java.DataSet;
@@ -140,7 +141,7 @@ public class ProcessOSM {
 				});
 
 		// create the polyline entities
-		DataSet<ComplexEntity> retWaysEntities = ways.join(waysGeometry).where(new KeySelector<WayEntity, Long>() {
+		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry).where(new KeySelector<WayEntity, Long>() {
 			@Override
 			public Long getKey(WayEntity value) throws Exception {
 				return value.id;
@@ -241,7 +242,7 @@ public class ProcessOSM {
 
 				});
 
-		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon.join(waysGeometry)
+		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon.joinWithHuge(waysGeometry)
 				.where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
 
 		// joinedWays : id, order, role, byte[]
@@ -278,20 +279,24 @@ public class ProcessOSM {
 
 		// joins with attributes
 
-		DataSet<ComplexEntity> retPolygons = rels.join(constructedPolygons).where(new KeySelector<Relation, Long>() {
+		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons).where(new KeySelector<Relation, Long>() {
 			@Override
 			public Long getKey(Relation value) throws Exception {
 				return value.id;
 			}
-		}).equalTo(0).with(new JoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
+		}).equalTo(0).with(new FlatJoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
+
 			@Override
-			public ComplexEntity join(Relation first, Tuple2<Long, byte[]> second) throws Exception {
+			public void join(Relation first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out) throws Exception {
+				if (first == null || second == null)
+					return;
+
 				ComplexEntity ce = new ComplexEntity();
 				ce.id = first.id;
 				ce.fields = first.fields;
 				ce.geomType = Type.Polygon;
 				ce.shapeGeometry = second.f1;
-				return ce;
+				out.collect(ce);
 			}
 		});
 
@@ -532,7 +537,7 @@ public class ProcessOSM {
 
 		}).writeAsCsv(outputResultFolder + "/rels.csv");
 
-		System.out.println(env.getExecutionPlan());
+		// System.out.println(env.getExecutionPlan());
 		env.execute();
 	}
 
