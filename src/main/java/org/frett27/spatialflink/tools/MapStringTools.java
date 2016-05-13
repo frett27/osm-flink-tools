@@ -28,7 +28,7 @@ public class MapStringTools {
 	
 		Map<String, String> fields = new HashMap<>();
 	
-		String[] pairs = fieldsValuePairs.split("|");
+		String[] pairs = fieldsValuePairs.split("\\|");
 		for (String s : pairs) {
 			if (s.isEmpty())
 				continue;

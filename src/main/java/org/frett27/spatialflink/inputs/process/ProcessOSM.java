@@ -55,19 +55,17 @@ public class ProcessOSM {
 
 	public static OSMResultsStreams constructOSMStreams(ExecutionEnvironment env, String inputFile) throws Exception {
 
-		
 		OSMPBFNodeInputFormat iNodes = new OSMPBFNodeInputFormat();
 		iNodes.setFilePath(inputFile);
-		DataSet<NodeEntity> nodes = env.createInput(iNodes,  new GenericTypeInfo<NodeEntity>(NodeEntity.class));
-		
+		DataSet<NodeEntity> nodes = env.createInput(iNodes, new GenericTypeInfo<NodeEntity>(NodeEntity.class));
+
 		OSMPBFWayInputFormat iWays = new OSMPBFWayInputFormat();
 		iWays.setFilePath(inputFile);
-		DataSet<WayEntity> ways = env.createInput(iWays,  new GenericTypeInfo<WayEntity>(WayEntity.class));
-		
+		DataSet<WayEntity> ways = env.createInput(iWays, new GenericTypeInfo<WayEntity>(WayEntity.class));
+
 		OSMPBFRelationInputFormat iRelation = new OSMPBFRelationInputFormat();
 		iRelation.setFilePath(inputFile);
-		DataSet<Relation> rels = env.createInput(iRelation,  new GenericTypeInfo<Relation>(Relation.class));
-
+		DataSet<Relation> rels = env.createInput(iRelation, new GenericTypeInfo<Relation>(Relation.class));
 
 		// get only the positions of the nodes
 		DataSet<Tuple3<Long, Double, Double>> onlypos = nodes
@@ -226,7 +224,7 @@ public class ProcessOSM {
 
 							int c = 0;
 							for (RelatedObject r : value.relatedObjects) {
-								
+
 								if ("way".equals(r.type)) {
 									Role role = Role.UNDEFINED;
 									if ("inner".equals(r.role)) {
@@ -360,11 +358,8 @@ public class ProcessOSM {
 
 		File polygons = new File(folder, "polygons.csv");
 
-
-		DataSet<Tuple3<Long, String, String>> polygonsDataset = 
-				env.readCsvFile(polygons.getAbsolutePath())
-				.ignoreInvalidLines()
-				.types(Long.class, String.class, String.class); 
+		DataSet<Tuple3<Long, String, String>> polygonsDataset = env.readCsvFile(polygons.getAbsolutePath())
+				.ignoreInvalidLines().types(Long.class, String.class, String.class);
 
 		DataSet<ComplexEntity> polygonsStream = polygonsDataset
 				.map(new MapFunction<Tuple3<Long, String, String>, ComplexEntity>() {
@@ -415,14 +410,25 @@ public class ProcessOSM {
 					String[] elements = value.f2.split("||");
 					for (String s : elements) {
 
+						if (s == null || s.isEmpty())
+							continue;
 						Map<String, String> h = MapStringTools.fromString(s);
+						if (h == null)
+							continue;
 						RelatedObject ro = new RelatedObject();
 
 						// h.put("relid", r.relatedId);
 						// h.put("role", r.role);
 						// h.put("type", r.type);
 						//
-						ro.relatedId = Long.parseLong((String) h.get("relid"));
+						if (h.get("relid") == null)
+							continue;
+
+						try {
+							ro.relatedId = Long.parseLong((String) h.get("relid"));
+						} catch (Exception ex) {
+							System.out.println("fail to parse :" + h.get("relid"));
+						}
 						ro.role = (String) h.get("role");
 						ro.type = (String) h.get("type");
 
@@ -511,7 +517,7 @@ public class ProcessOSM {
 
 					for (RelatedObject r : value.relatedObjects) {
 						HashMap<String, String> h = new HashMap<>();
-						h.put("relid", Long.toString( r.relatedId));
+						h.put("relid", Long.toString(r.relatedId));
 						h.put("role", r.role);
 						h.put("type", r.type);
 						if (sb.length() > 0) {
