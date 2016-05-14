@@ -199,7 +199,7 @@ public class ProcessOSM {
 			@Override
 			public boolean filter(Relation value) throws Exception {
 
-				if (value == null)
+				if (value == null || value.relatedObjects == null)
 					return false;
 
 				assert value != null;
@@ -253,6 +253,9 @@ public class ProcessOSM {
 					public void reduce(Iterable<Tuple4<Long, Integer, Role, byte[]>> values,
 							Collector<Tuple2<Long, byte[]>> out) throws Exception {
 
+						if (values == null)
+							return;
+						
 						ArrayList<MultiPath> polys = new ArrayList<>();
 						ArrayList<Role> roles = new ArrayList<>();
 						long id = -1;
