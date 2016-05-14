@@ -12,7 +12,6 @@ local execution (1 taskmanager), 4 CPU, 8gb reserved for taskmanager
 
 ![](execution_m4xlarge.png)
 
-##During execution
 
 
 
