@@ -1,19 +1,27 @@
 /*
  */
 
+
+version = 0.1
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
     }
 }
-apply plugin: 'com.github.johnrengelman.shadow'
+
 
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'eclipse'
+
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'eu.appsatori.fatjar'
 
 eclipse {
     classpath {
@@ -29,18 +37,16 @@ repositories {
     mavenLocal()
 }
 
-def flinkversion = "0.10.1"
-//def flinkversion = "1.0.0"
+def flinkversion = "1.0.3"
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile files('externallibs/osmpbf-1.3.3.jar')	
     compile 'com.esri.geometry:esri-geometry-api:1.2.1'
-	compile "org.apache.flink:flink-java:${flinkversion}"
-	compile "org.apache.flink:flink-core:${flinkversion}"
-	compile "org.apache.flink:flink-runtime:${flinkversion}"
-    compile "org.apache.flink:flink-clients:${flinkversion}"
-    compile "org.apache.flink:flink-hadoop-compatibility:${flinkversion}"
+
+    compile "org.apache.flink:flink-java:${flinkversion}"
+    compile "org.apache.flink:flink-clients_2.10:${flinkversion}"
+
 
     testCompile "junit:junit:4.11"
 }
@@ -49,9 +55,22 @@ jar {
             attributes 'Main-Class': 'org.frett27.spatialflink.inputs.process.ProcessOSM'
      }
 }
+
+// shadow jar, for use inside a flink cluster
 shadowJar {
   dependencies {
     include(dependency('com.esri.geometry:esri-geometry-api'))
     include(dependency(files('externallibs/osmpbf-1.3.3.jar')))
   }
+}
+
+// fatjar task for 
+task allInOneJar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    manifest {
+        attributes 'Implementation-Title': 'osm-flink-tools', 'Implementation-Version': version
+        attributes 'Main-Class': 'org.frett27.spatialflink.inputs.process.ProcessOSM'
+    }
 }
