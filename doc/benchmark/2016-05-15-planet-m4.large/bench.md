@@ -42,6 +42,10 @@ final status of storage unit :
 	none              102400         0    102400   0% /run/user
 
 
+TaskManager configuration :
+
+![](taskmanager.png)
+
 #Results
 
 1d and 10h - 34h
