@@ -10,8 +10,6 @@ import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatJoinFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
-import org.apache.flink.api.common.functions.JoinFunction;
-import org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHint;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.operators.Order;
 import org.apache.flink.api.java.DataSet;
@@ -34,6 +32,7 @@ import org.frett27.spatialflink.tools.GeometryTools;
 import org.frett27.spatialflink.tools.MapStringTools;
 import org.frett27.spatialflink.tools.PolygonCreator;
 import org.frett27.spatialflink.tools.Role;
+import org.frett27.spatialflink.tools.StringPop;
 
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Geometry.Type;
@@ -54,6 +53,9 @@ public class ProcessOSM {
 
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// construct osm stream from pbf
+	
 	public static OSMResultsStreams constructOSMStreams(ExecutionEnvironment env, String inputFile) throws Exception {
 
 		OSMPBFNodeInputFormat iNodes = new OSMPBFNodeInputFormat();
@@ -141,35 +143,36 @@ public class ProcessOSM {
 				});
 
 		// create the polyline entities
-		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry).where(new KeySelector<WayEntity, Long>() {
-			@Override
-			public Long getKey(WayEntity value) throws Exception {
-				return value.id;
-			}
-		}).equalTo(0).with(new FlatJoinFunction<WayEntity, Tuple2<Long, byte[]>, ComplexEntity>() {
-			@Override
-			public void join(WayEntity first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
-					throws Exception {
+		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry)
+				.where(new KeySelector<WayEntity, Long>() {
+					@Override
+					public Long getKey(WayEntity value) throws Exception {
+						return value.id;
+					}
+				}).equalTo(0).with(new FlatJoinFunction<WayEntity, Tuple2<Long, byte[]>, ComplexEntity>() {
+					@Override
+					public void join(WayEntity first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
+							throws Exception {
 
-				if (first == null) {
-					return;
-				}
+						if (first == null) {
+							return;
+						}
 
-				// take only the ways with attributes ??
-				if (first.fields == null || first.fields.size() == 0) {
-					return;
-				}
+						// take only the ways with attributes ??
+						if (first.fields == null || first.fields.size() == 0) {
+							return;
+						}
 
-				ComplexEntity ce = new ComplexEntity();
-				ce.fields = first.fields;
-				ce.id = first.id;
-				ce.shapeGeometry = second.f1;
-				ce.geomType = Type.Polyline;
+						ComplexEntity ce = new ComplexEntity();
+						ce.fields = first.fields;
+						ce.id = first.id;
+						ce.shapeGeometry = second.f1;
+						ce.geomType = Type.Polyline;
 
-				out.collect(ce);
-			}
+						out.collect(ce);
+					}
 
-		});
+				});
 
 		// ways that contains polygons
 		DataSet<ComplexEntity> waysAndPolys = retWaysEntities.map(new MapFunction<ComplexEntity, ComplexEntity>() {
@@ -242,8 +245,8 @@ public class ProcessOSM {
 
 				});
 
-		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon.joinWithHuge(waysGeometry)
-				.where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
+		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon
+				.joinWithHuge(waysGeometry).where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
 
 		// joinedWays : id, order, role, byte[]
 		DataSet<Tuple2<Long, byte[]>> constructedPolygons = joinedWaysForPolygonConstruct.groupBy(0)
@@ -255,7 +258,7 @@ public class ProcessOSM {
 
 						if (values == null)
 							return;
-						
+
 						ArrayList<MultiPath> polys = new ArrayList<>();
 						ArrayList<Role> roles = new ArrayList<>();
 						long id = -1;
@@ -282,26 +285,28 @@ public class ProcessOSM {
 
 		// joins with attributes
 
-		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons).where(new KeySelector<Relation, Long>() {
-			@Override
-			public Long getKey(Relation value) throws Exception {
-				return value.id;
-			}
-		}).equalTo(0).with(new FlatJoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
+		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons)
+				.where(new KeySelector<Relation, Long>() {
+					@Override
+					public Long getKey(Relation value) throws Exception {
+						return value.id;
+					}
+				}).equalTo(0).with(new FlatJoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
 
-			@Override
-			public void join(Relation first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out) throws Exception {
-				if (first == null || second == null)
-					return;
+					@Override
+					public void join(Relation first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
+							throws Exception {
+						if (first == null || second == null)
+							return;
 
-				ComplexEntity ce = new ComplexEntity();
-				ce.id = first.id;
-				ce.fields = first.fields;
-				ce.geomType = Type.Polygon;
-				ce.shapeGeometry = second.f1;
-				out.collect(ce);
-			}
-		});
+						ComplexEntity ce = new ComplexEntity();
+						ce.id = first.id;
+						ce.fields = first.fields;
+						ce.geomType = Type.Polygon;
+						ce.shapeGeometry = second.f1;
+						out.collect(ce);
+					}
+				});
 
 		OSMResultsStreams rs = new OSMResultsStreams();
 		rs.retNodesWithAttributes = retNodesWithAttributes;
@@ -336,20 +341,71 @@ public class ProcessOSM {
 	}
 
 	/**
-	 * read the csv, and construct streams
+	 * construct the streams from HDFS, S3
 	 * 
 	 * @param env
-	 * @param folder
+	 * @param reference
 	 * @return
 	 * @throws Exception
 	 */
-	public static OSMResultsStreams constructOSMStreamsFromFolder(ExecutionEnvironment env, File folder)
-			throws Exception {
+	public static OSMResultsStreams constructOSMStreamsFrom(ExecutionEnvironment env, String path) throws Exception {
 
-		File nodes = new File(folder, "nodes.csv");
-		DataSet<Tuple4<Long, Double, Double, String>> nodesDataset = env.readCsvFile(nodes.getAbsolutePath())
-				.types(Long.class, Double.class, Double.class, String.class);
+		DataSet<Tuple4<Long, Double, Double, String>> nodesDataset = env.readTextFile(path + "/nodes.csv")
+				.map(new MapFunction<String, Tuple4<Long, Double, Double, String>>() {
+					@Override
+					public Tuple4<Long, Double, Double, String> map(String value) throws Exception {
+
+						StringBuilder v = new StringBuilder(value);
+						return new Tuple4<Long, Double, Double, String>(Long.parseLong(StringPop.pop(v, ",")),
+								Double.parseDouble(StringPop.pop(v, ",")), Double.parseDouble(StringPop.pop(v, ",")),
+								StringPop.pop(v, ","));
+
+					}
+				});
+
+		DataSet<Tuple3<Long, String, String>> polygonsDataset = env.readTextFile(path + "/polygons.csv")
+				.map(new MapFunction<String, Tuple3<Long, String, String>>() {
+
+					@Override
+					public Tuple3<Long, String, String> map(String value) throws Exception {
+						StringBuilder v = new StringBuilder(value);
+						return new Tuple3<Long, String, String>(Long.parseLong(StringPop.pop(v, ",")),
+								StringPop.pop(v, ","), StringPop.pop(v, ","));
+					}
+				});
+
+		DataSet<Tuple3<Long, String, String>> waysDataset = env.readTextFile(path + "/ways.csv")
+				.map(new MapFunction<String, Tuple3<Long, String, String>>() {
+
+					@Override
+					public Tuple3<Long, String, String> map(String value) throws Exception {
+						StringBuilder v = new StringBuilder(value);
+						return new Tuple3<Long, String, String>(Long.parseLong(StringPop.pop(v, ",")),
+								StringPop.pop(v, ","), StringPop.pop(v, ","));
+					}
+				});
+
+		DataSet<Tuple3<Long, String, String>> relsDataset = env.readTextFile(path + "/rels.csv")
+				.map(new MapFunction<String, Tuple3<Long, String, String>>() {
+					@Override
+					public Tuple3<Long, String, String> map(String value) throws Exception {
+						StringBuilder v = new StringBuilder(value);
+						return new Tuple3<Long, String, String>(Long.parseLong(StringPop.pop(v, ",")),
+								StringPop.pop(v, ","), StringPop.pop(v, ","));
+					}
+				});
+
+		return constructOSMStreams(env, nodesDataset, polygonsDataset, waysDataset, relsDataset);
+	}
+
+	
+	private static OSMResultsStreams constructOSMStreams(ExecutionEnvironment env,
+			DataSet<Tuple4<Long, Double, Double, String>> nodesDataset,
+			DataSet<Tuple3<Long, String, String>> polygonsDataset, DataSet<Tuple3<Long, String, String>> waysDataset,
+			DataSet<Tuple3<Long, String, String>> relsDataset) {
+
 		OSMResultsStreams result = new OSMResultsStreams();
+
 		DataSet<NodeEntity> nodeStream = nodesDataset
 				.map(new MapFunction<Tuple4<Long, Double, Double, String>, NodeEntity>() {
 					@Override
@@ -364,11 +420,6 @@ public class ProcessOSM {
 					}
 				});
 
-		File polygons = new File(folder, "polygons.csv");
-
-		DataSet<Tuple3<Long, String, String>> polygonsDataset = env.readCsvFile(polygons.getAbsolutePath())
-				.ignoreInvalidLines().types(Long.class, String.class, String.class);
-
 		DataSet<ComplexEntity> polygonsStream = polygonsDataset
 				.map(new MapFunction<Tuple3<Long, String, String>, ComplexEntity>() {
 					@Override
@@ -382,10 +433,6 @@ public class ProcessOSM {
 					}
 				});
 
-		File ways = new File(folder, "ways.csv");
-		DataSet<Tuple3<Long, String, String>> waysDataset = env.readCsvFile(ways.getAbsolutePath()).types(Long.class,
-				String.class, String.class);
-
 		DataSet<ComplexEntity> waysStream = waysDataset
 				.map(new MapFunction<Tuple3<Long, String, String>, ComplexEntity>() {
 					@Override
@@ -398,10 +445,6 @@ public class ProcessOSM {
 						return waysEntity;
 					}
 				});
-
-		File rels = new File(folder, "rels.csv");
-		DataSet<Tuple3<Long, String, String>> relsDataset = env.readCsvFile(rels.getAbsolutePath()).types(Long.class,
-				String.class, String.class);
 
 		DataSet<Relation> relationStream = relsDataset.map(new MapFunction<Tuple3<Long, String, String>, Relation>() {
 			@Override
@@ -458,6 +501,40 @@ public class ProcessOSM {
 		// relations
 
 		return result;
+
+	}
+
+	/**
+	 * read the csv, and construct streams
+	 * 
+	 * @param env
+	 * @param folder
+	 * @return
+	 * @throws Exception
+	 */
+	public static OSMResultsStreams constructOSMStreamsFromFolder(ExecutionEnvironment env, File folder)
+			throws Exception {
+
+		File nodes = new File(folder, "nodes.csv");
+
+		DataSet<Tuple4<Long, Double, Double, String>> nodesDataset = env.readCsvFile(nodes.getAbsolutePath())
+				.types(Long.class, Double.class, Double.class, String.class);
+
+		File polygons = new File(folder, "polygons.csv");
+
+		DataSet<Tuple3<Long, String, String>> polygonsDataset = env.readCsvFile(polygons.getAbsolutePath())
+				.ignoreInvalidLines().types(Long.class, String.class, String.class);
+
+		File ways = new File(folder, "ways.csv");
+		DataSet<Tuple3<Long, String, String>> waysDataset = env.readCsvFile(ways.getAbsolutePath()).types(Long.class,
+				String.class, String.class);
+
+		File rels = new File(folder, "rels.csv");
+		DataSet<Tuple3<Long, String, String>> relsDataset = env.readCsvFile(rels.getAbsolutePath()).types(Long.class,
+				String.class, String.class);
+
+		return constructOSMStreams(env, nodesDataset, polygonsDataset, waysDataset, relsDataset);
+
 	}
 
 	public static void main(String[] args) throws Exception {

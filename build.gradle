@@ -47,6 +47,10 @@ dependencies {
     compile "org.apache.flink:flink-java:${flinkversion}"
     compile "org.apache.flink:flink-clients_2.10:${flinkversion}"
 
+	// http://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws
+	compile group: 'org.apache.hadoop', name: 'hadoop-aws', version: '2.7.2'
+
+
 
     testCompile "junit:junit:4.11"
 }
