@@ -19,7 +19,7 @@ This project use flink as the main framework, as this is built on top of MapRedu
 we use the **ESRI-Geometry java API** [https://github.com/Esri/geometry-api-java](https://github.com/Esri/geometry-api-java) for efficient **ser/deser** 
 
 
-a detailed explaination of the output file format is described Here : [Output File Format Description](exported_file_format.md)
+a detailed explaination of the output file format is described Here : [Output File Format Description](doc/exported_file_format.md)
 
 
 
@@ -34,7 +34,7 @@ __be sure you have at least java 7 or 8 in the path__
 	java -jar osm-flink-tools-[version]-all.jar rhone-alpes-latest.osm.pbf .\
 	
 
-this command line will create 4 folders containing the reconstructed geometries , as described here : [Output File Format Description](exported_file_format.md)
+this command line will create 4 folders containing the reconstructed geometries , as described here : [Output File Format Description](doc/exported_file_format.md)
 
 
 
