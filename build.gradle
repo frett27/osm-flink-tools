@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
-        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+        //        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
     }
 }
 
@@ -21,7 +21,10 @@ apply plugin: 'eclipse'
 
 
 apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'eu.appsatori.fatjar'
+// apply plugin: 'eu.appsatori.fatjar'
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.*
+
 
 eclipse {
     classpath {
@@ -64,7 +67,22 @@ shadowJar {
   }
 }
 
+task allJars(type: ShadowJar) {
+  from sourceSets.main.output
+   configurations = [ project.configurations.compile ]
+  transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
+	resource = 'reference.conf'
+  }
+    manifest {
+        attributes 'Implementation-Title': 'osm-flink-tools', 'Implementation-Version': version
+        attributes 'Main-Class': 'org.frett27.spatialflink.inputs.process.ProcessOSM'
+    }
+}
+
+
 // fatjar task for 
+/*
+
 task allInOneJar(type: Jar) {
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -74,3 +92,6 @@ task allInOneJar(type: Jar) {
         attributes 'Main-Class': 'org.frett27.spatialflink.inputs.process.ProcessOSM'
     }
 }
+
+*/
+
