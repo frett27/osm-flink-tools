@@ -2,9 +2,10 @@
 
 ![](https://travis-ci.org/frett27/osm-flink-tools.svg?branch=master)
 
-Tools for integrating OSM data in HDFS or CSV files.
+Tools for integrating OSM data in HDFS or CSV files, with the geometry reconstructed. (lines, polygons).
 
-use the **ESRI-Geometry java API** [https://github.com/Esri/geometry-api-java](https://github.com/Esri/geometry-api-java) for efficient **ser/deser** 
+
+##Goal
 
 This project provide inputFormat for reading PBF OSM files and create lines, polygons, relations, permitting to use OSM data in big data chains
 
@@ -12,8 +13,32 @@ Polylines (Ways) Polygons are reconstructed, for a direct use, ESRI-Geometry pro
 
 This project use flink as the main framework, as this is built on top of MapReduce object, this can be ported to the standard Spark or Hadoop framwork.
 
+##Design And Output file format
 
-##Usage
+
+we use the **ESRI-Geometry java API** [https://github.com/Esri/geometry-api-java](https://github.com/Esri/geometry-api-java) for efficient **ser/deser** 
+
+
+a detailed explaination of the output file format is described Here : [Output File Format Description](exported_file_format.md)
+
+
+
+##Using the tool as a standalone command line (5 mins startup)
+
+This tool can now be used as a single commandline, as well as a job on a cluster.
+
+Using the jar as a standalone jar :
+
+__be sure you have at least java 7 or 8 in the path__
+
+	java -jar ..\build\libs\osm-flink-tools-[version]-all.jar rhone-alpes-latest.osm.pbf .\
+	
+
+this command line will create 4 folders containing the reconstructed geometries , as described here : [Output File Format Description](exported_file_format.md)
+
+
+
+##Using the Tool in a flink cluster or flink Job
 
 
 ProcessOSM class, that can be used as a single process (Yarn or flink cluster):
