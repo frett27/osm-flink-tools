@@ -5,9 +5,9 @@
 Tools for integrating OSM data in HDFS or CSV files, with the geometry reconstructed. (lines, polygons).
 
 
-##Goal
+##Goal - Ease the use of OSM datas in flink / Hadoop clusters
 
-This project provide inputFormat for reading PBF OSM files and create lines, polygons, relations, permitting to use OSM data in big data chains
+This project provide inputFormat for reading PBF OSM files and create lines, polygons, relations, permitting to use OSM data in big data stacks.
 
 Polylines (Ways) Polygons are reconstructed, for a direct use, ESRI-Geometry provide geometry primitives for buffers, intersections, quadtree .. etc
 
@@ -31,7 +31,7 @@ Using the jar as a standalone jar :
 
 __be sure you have at least java 7 or 8 in the path__
 
-	java -jar ..\build\libs\osm-flink-tools-[version]-all.jar rhone-alpes-latest.osm.pbf .\
+	java -jar osm-flink-tools-[version]-all.jar rhone-alpes-latest.osm.pbf .\
 	
 
 this command line will create 4 folders containing the reconstructed geometries , as described here : [Output File Format Description](exported_file_format.md)
