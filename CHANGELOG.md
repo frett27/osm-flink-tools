@@ -2,6 +2,13 @@
 #Change log for osm-flink-tools
 
 
+This file describes the changes on the project.
+
+##Version 0.2 - August 2016
+
+- Fix compilation on windows
+- Add a new compile task to use the jar in standalone mode (without flink cluster) 
+
 ##Version 0.1 - May 2016
 
 - Improve the OSMProcess by 1/3 in reading each elements (Nodes/Ways/Rels) in a separate stream instead of a single input stream.
