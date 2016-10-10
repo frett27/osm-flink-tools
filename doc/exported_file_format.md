@@ -19,7 +19,7 @@ Several benchmark and experience return show that binary with Base64 format. the
 
 This format is used for several reasons :
 
- - encoding is about 20% more efficient than JSON encoding
+ - encoding is about 20% more efficient than JSON encoding (processing time)
  - we usually don't need an exhaustive description of geometry composition in reading the file with a text editor.
  - this save also **a lot on space on disk**, so save IO and enhance performance.
 
