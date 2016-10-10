@@ -141,35 +141,36 @@ public class ProcessOSM {
 				});
 
 		// create the polyline entities
-		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry).where(new KeySelector<WayEntity, Long>() {
-			@Override
-			public Long getKey(WayEntity value) throws Exception {
-				return value.id;
-			}
-		}).equalTo(0).with(new FlatJoinFunction<WayEntity, Tuple2<Long, byte[]>, ComplexEntity>() {
-			@Override
-			public void join(WayEntity first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
-					throws Exception {
+		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry)
+				.where(new KeySelector<WayEntity, Long>() {
+					@Override
+					public Long getKey(WayEntity value) throws Exception {
+						return value.id;
+					}
+				}).equalTo(0).with(new FlatJoinFunction<WayEntity, Tuple2<Long, byte[]>, ComplexEntity>() {
+					@Override
+					public void join(WayEntity first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
+							throws Exception {
 
-				if (first == null) {
-					return;
-				}
+						if (first == null) {
+							return;
+						}
 
-				// take only the ways with attributes ??
-				if (first.fields == null || first.fields.size() == 0) {
-					return;
-				}
+						// take only the ways with attributes ??
+						if (first.fields == null || first.fields.size() == 0) {
+							return;
+						}
 
-				ComplexEntity ce = new ComplexEntity();
-				ce.fields = first.fields;
-				ce.id = first.id;
-				ce.shapeGeometry = second.f1;
-				ce.geomType = Type.Polyline;
+						ComplexEntity ce = new ComplexEntity();
+						ce.fields = first.fields;
+						ce.id = first.id;
+						ce.shapeGeometry = second.f1;
+						ce.geomType = Type.Polyline;
 
-				out.collect(ce);
-			}
+						out.collect(ce);
+					}
 
-		});
+				});
 
 		// ways that contains polygons
 		DataSet<ComplexEntity> waysAndPolys = retWaysEntities.map(new MapFunction<ComplexEntity, ComplexEntity>() {
@@ -221,19 +222,24 @@ public class ProcessOSM {
 							throws Exception {
 						if (value.relatedObjects != null) {
 
-							// if this is a polygon relation, emit the elements
+							if (value.fields != null && ("multipolygon".equalsIgnoreCase(value.fields.get("type"))
+									|| "boundary".equalsIgnoreCase(value.fields.get("type")))) {
 
-							int c = 0;
-							for (RelatedObject r : value.relatedObjects) {
+								// if this is a polygon relation, emit the
+								// elements
 
-								if ("way".equals(r.type)) {
-									Role role = Role.UNDEFINED;
-									if ("inner".equals(r.role)) {
-										role = Role.INNER;
-									} else if ("outer".equals(r.role)) {
-										role = Role.OUTER;
+								int c = 0;
+								for (RelatedObject r : value.relatedObjects) {
+
+									if ("way".equals(r.type)) {
+										Role role = Role.UNDEFINED;
+										if ("inner".equals(r.role)) {
+											role = Role.INNER;
+										} else if ("outer".equals(r.role)) {
+											role = Role.OUTER;
+										}
+										out.collect(new Tuple4<>(value.id, r.relatedId, c++, role));
 									}
-									out.collect(new Tuple4<>(value.id, r.relatedId, c++, role));
 								}
 							}
 
@@ -242,8 +248,8 @@ public class ProcessOSM {
 
 				});
 
-		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon.joinWithHuge(waysGeometry)
-				.where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
+		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon
+				.joinWithHuge(waysGeometry).where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
 
 		// joinedWays : id, order, role, byte[]
 		DataSet<Tuple2<Long, byte[]>> constructedPolygons = joinedWaysForPolygonConstruct.groupBy(0)
@@ -255,7 +261,7 @@ public class ProcessOSM {
 
 						if (values == null)
 							return;
-						
+
 						ArrayList<MultiPath> polys = new ArrayList<>();
 						ArrayList<Role> roles = new ArrayList<>();
 						long id = -1;
@@ -282,26 +288,28 @@ public class ProcessOSM {
 
 		// joins with attributes
 
-		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons).where(new KeySelector<Relation, Long>() {
-			@Override
-			public Long getKey(Relation value) throws Exception {
-				return value.id;
-			}
-		}).equalTo(0).with(new FlatJoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
+		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons)
+				.where(new KeySelector<Relation, Long>() {
+					@Override
+					public Long getKey(Relation value) throws Exception {
+						return value.id;
+					}
+				}).equalTo(0).with(new FlatJoinFunction<Relation, Tuple2<Long, byte[]>, ComplexEntity>() {
 
-			@Override
-			public void join(Relation first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out) throws Exception {
-				if (first == null || second == null)
-					return;
+					@Override
+					public void join(Relation first, Tuple2<Long, byte[]> second, Collector<ComplexEntity> out)
+							throws Exception {
+						if (first == null || second == null)
+							return;
 
-				ComplexEntity ce = new ComplexEntity();
-				ce.id = first.id;
-				ce.fields = first.fields;
-				ce.geomType = Type.Polygon;
-				ce.shapeGeometry = second.f1;
-				out.collect(ce);
-			}
-		});
+						ComplexEntity ce = new ComplexEntity();
+						ce.id = first.id;
+						ce.fields = first.fields;
+						ce.geomType = Type.Polygon;
+						ce.shapeGeometry = second.f1;
+						out.collect(ce);
+					}
+				});
 
 		OSMResultsStreams rs = new OSMResultsStreams();
 		rs.retNodesWithAttributes = retNodesWithAttributes;
