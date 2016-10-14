@@ -468,6 +468,13 @@ public class ProcessOSM {
 		return result;
 	}
 
+	private static String quoteString(String s) {
+		if (s == null)
+			return null;
+		// remove quotes
+		return "\"" + s.replaceAll("\"", "") + "\"";
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		if (args.length < 2)
@@ -503,7 +510,8 @@ public class ProcessOSM {
 		rs.retNodesWithAttributes.map(new MapFunction<NodeEntity, Tuple4<Long, Double, Double, String>>() {
 			@Override
 			public Tuple4<Long, Double, Double, String> map(NodeEntity value) throws Exception {
-				return new Tuple4<>(value.id, value.x, value.y, MapStringTools.convertToString(value.fields));
+				return new Tuple4<>(value.id, value.x, value.y,
+						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 		}).writeAsCsv(outputResultFolder + "/nodes.csv");
 
@@ -511,7 +519,7 @@ public class ProcessOSM {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
-						MapStringTools.convertToString(value.fields));
+						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 		}).writeAsCsv(outputResultFolder + "/polygons.csv");
 
@@ -519,7 +527,7 @@ public class ProcessOSM {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
-						MapStringTools.convertToString(value.fields));
+						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 
 		}).writeAsCsv(outputResultFolder + "/ways.csv");
@@ -543,7 +551,8 @@ public class ProcessOSM {
 					}
 				}
 
-				return new Tuple3<>(value.id, MapStringTools.convertToString(value.fields), sb.toString());
+				return new Tuple3<>(value.id, quoteString(MapStringTools.convertToString(value.fields)),
+						quoteString(sb.toString()));
 			}
 
 		}).writeAsCsv(outputResultFolder + "/rels.csv");

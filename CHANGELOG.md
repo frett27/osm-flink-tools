@@ -4,6 +4,10 @@
 
 This file describes the changes on the project.
 
+##Version 0.3.1 - Octobre 2016
+
+- fix comma in datas, and quoted strings
+
 ##Version 0.3 - October 2016
 
 - Augment the polygon construction to not use the outer and inner relations
