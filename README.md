@@ -36,6 +36,7 @@ __be sure you have at least java 7 or 8 in the path__
 
 this command line will create 4 folders containing the reconstructed geometries , as described here : [Output File Format Description](doc/exported_file_format.md)
 
+if you wish to generate utf-8 or local specific csv files, add `-Dfile.encoding=UTF-8` in the command line to use the given charset in the output files, this helps integrate worldwide files or foreign countries. (this must be specified before the -jar option)
 
 
 ##Using the Tool in a flink cluster or flink Job
