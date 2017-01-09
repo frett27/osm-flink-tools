@@ -224,19 +224,24 @@ public class ProcessOSM {
 							throws Exception {
 						if (value.relatedObjects != null) {
 
-							// if this is a polygon relation, emit the elements
+							if (value.fields != null && ("multipolygon".equalsIgnoreCase(value.fields.get("type"))
+									|| "boundary".equalsIgnoreCase(value.fields.get("type")))) {
 
-							int c = 0;
-							for (RelatedObject r : value.relatedObjects) {
+								// if this is a polygon relation, emit the
+								// elements
 
-								if ("way".equals(r.type)) {
-									Role role = Role.UNDEFINED;
-									if ("inner".equals(r.role)) {
-										role = Role.INNER;
-									} else if ("outer".equals(r.role)) {
-										role = Role.OUTER;
+								int c = 0;
+								for (RelatedObject r : value.relatedObjects) {
+
+									if ("way".equals(r.type)) {
+										Role role = Role.UNDEFINED;
+										if ("inner".equals(r.role)) {
+											role = Role.INNER;
+										} else if ("outer".equals(r.role)) {
+											role = Role.OUTER;
+										}
+										out.collect(new Tuple4<>(value.id, r.relatedId, c++, role));
 									}
-									out.collect(new Tuple4<>(value.id, r.relatedId, c++, role));
 								}
 							}
 
@@ -537,6 +542,13 @@ public class ProcessOSM {
 
 	}
 
+	private static String quoteString(String s) {
+		if (s == null)
+			return null;
+		// remove quotes
+		return "\"" + s.replaceAll("\"", "") + "\"";
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		if (args.length < 2)
@@ -572,7 +584,8 @@ public class ProcessOSM {
 		rs.retNodesWithAttributes.map(new MapFunction<NodeEntity, Tuple4<Long, Double, Double, String>>() {
 			@Override
 			public Tuple4<Long, Double, Double, String> map(NodeEntity value) throws Exception {
-				return new Tuple4<>(value.id, value.x, value.y, MapStringTools.convertToString(value.fields));
+				return new Tuple4<>(value.id, value.x, value.y,
+						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 		}).writeAsCsv(outputResultFolder + "/nodes.csv");
 
@@ -580,7 +593,7 @@ public class ProcessOSM {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
-						MapStringTools.convertToString(value.fields));
+						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 		}).writeAsCsv(outputResultFolder + "/polygons.csv");
 
@@ -588,7 +601,7 @@ public class ProcessOSM {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
 				return new Tuple3<>(value.id, GeometryTools.toAscii(value.shapeGeometry),
-						MapStringTools.convertToString(value.fields));
+						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 
 		}).writeAsCsv(outputResultFolder + "/ways.csv");
@@ -612,7 +625,8 @@ public class ProcessOSM {
 					}
 				}
 
-				return new Tuple3<>(value.id, MapStringTools.convertToString(value.fields), sb.toString());
+				return new Tuple3<>(value.id, quoteString(MapStringTools.convertToString(value.fields)),
+						quoteString(sb.toString()));
 			}
 
 		}).writeAsCsv(outputResultFolder + "/rels.csv");

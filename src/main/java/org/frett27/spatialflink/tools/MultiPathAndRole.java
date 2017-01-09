@@ -26,4 +26,10 @@ public class MultiPathAndRole {
 
 		return sb.toString();
 	}
+	
+	public void debugLoadFromJSON(String json) throws Exception {
+		
+	}
+	
+	
 }

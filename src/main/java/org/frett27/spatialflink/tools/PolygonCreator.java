@@ -126,6 +126,7 @@ public class PolygonCreator {
 			if (logger.isDebugEnabled())
 				logger.debug("current :" + current);
 
+			// autoclosed paths
 			while (current != null && isClosed(current.getMultiPath())) {
 				// add to polygon
 				logger.debug("current is closed, add to finalPolygon");
@@ -146,7 +147,7 @@ public class PolygonCreator {
 				}
 			}
 
-			// current might be null
+			// current might be null (no way left)
 
 			if (current == null) {
 				logger.debug("current is null, end of the construction");
@@ -251,8 +252,8 @@ public class PolygonCreator {
 					sb.append("]");
 					sb.append("}");
 
-					System.out.println("fail to construct poly :"
-							+ sb.toString());
+//					System.out.println("fail to construct poly :"
+//							+ sb.toString());
 
 					if (optionalReport != null) {
 						try {
@@ -266,7 +267,7 @@ public class PolygonCreator {
 						}
 					}
 					// raise exception for polygon construct
-					throw new Exception("path cannot be closed");
+					throw new Exception("path cannot be closed, pathLeft :" + pathLeft.size() + " originalsize :" + originalList.size());
 				}
 
 				// closed ???
@@ -298,6 +299,7 @@ public class PolygonCreator {
 
 			}
 
+			// next path
 			current = pop(pathLeft);
 
 		}
@@ -372,13 +374,14 @@ public class PolygonCreator {
 
 		int bestindex = -1;
 		double distance = Double.MAX_VALUE;
+		MultiPath bestBet = null;
 
 		for (int i = 0; i < left.size(); i++) {
 
 			MultiPathAndRole e = left.get(i);
 
-			if (e.getRole() != searchRole && e.getRole() != Role.UNDEFINED)
-				continue;
+//			if (e.getRole() != searchRole && e.getRole() != Role.UNDEFINED)
+//				continue;
 
 			MultiPath p = e.getMultiPath();
 			assert p != null;
@@ -390,6 +393,7 @@ public class PolygonCreator {
 			Point startPoint = p.getPoint(indexStart);
 			Point entPoint = p.getPoint(indexStop);
 			if (areCoincident(startPoint, joinPoint)) {
+				
 				// remove point in the collection
 				left.remove(i);
 				return p;
@@ -410,18 +414,46 @@ public class PolygonCreator {
 			if (d < distance) {
 				distance = d;
 				bestindex = i;
+				bestBet = p;
 			}
 			//
 
 		}
 
-		// System.out.println("best probable match for point "
-		// + joinPoint
-		// + " index "
-		// + bestindex
-		// + "("
-		// + GeometryEngine.geometryToJson(4623, left.get(bestindex)
-		// .getMultiPath()) + ") distance :" + distance);
+//		 System.out.println("best probable match for point "
+//		 + joinPoint
+//		 + " index "
+//		 + bestindex
+//		 + "("
+//		 + GeometryEngine.geometryToJson(4623, left.get(bestindex)
+//		 .getMultiPath()) + ") distance :" + distance);
+//		 
+//		 if (bestindex != -1)
+//		 {
+//			 int indexStart = bestBet.getPathStart(0);
+//				int indexStop = bestBet.getPathEnd(0) - 1;
+//
+//			 Point startPoint = bestBet.getPoint(indexStart);
+//				Point entPoint = bestBet.getPoint(indexStop);
+//				if (areCoincident(startPoint, joinPoint)) {
+//					
+//					// remove point in the collection
+//					left.remove(bestindex);
+//					return bestBet;
+//
+//				} else if (areCoincident(entPoint, joinPoint)) {
+//
+//					// reverse the order
+//					MultiPath newGeometry = (MultiPath) bestBet.copy();
+//					newGeometry.reverseAllPaths();
+//
+//					left.remove(bestindex);
+//					return newGeometry;
+//				}
+//
+//		 }
+//		 
+		 
 
 		return null;
 	}
@@ -431,7 +463,8 @@ public class PolygonCreator {
 		assert p2 != null;
 
 		double euclidianDistance = euclidianDistance(p1, p2);
-		return euclidianDistance < 1e-14;
+		 return euclidianDistance < 1e-14;
+		//return euclidianDistance < 1e-5;
 
 	}
 
