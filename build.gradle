@@ -31,7 +31,7 @@ repositories {
 	mavenLocal()
 }
 
-def flinkversion = "1.0.3"
+def flinkversion = "1.3.1"
 
 dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.5'
