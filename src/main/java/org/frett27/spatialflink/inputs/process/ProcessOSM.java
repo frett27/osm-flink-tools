@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.flink.api.common.functions.FilterFunction;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.api.common.functions.FlatJoinFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
@@ -41,6 +42,9 @@ import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
+
+import static org.apache.flink.api.common.operators.base.JoinOperatorBase.*;
+
 
 public class ProcessOSM {
 
@@ -103,7 +107,7 @@ public class ProcessOSM {
 
 		// relslink contains id, related and order
 		// only pos contains id, x, y
-		DataSet<Tuple4<Long, Integer, Double, Double>> joinedWaysWithPoints = relsLink.joinWithHuge(onlypos).where(1)
+		DataSet<Tuple4<Long, Integer, Double, Double>> joinedWaysWithPoints = relsLink.join(onlypos,JoinHint.REPARTITION_SORT_MERGE).where(1)
 				.equalTo(0).projectFirst(0, 2).projectSecond(1, 2);
 
 		// join on related, keep id, order, x, y
@@ -143,7 +147,7 @@ public class ProcessOSM {
 				});
 
 		// create the polyline entities
-		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry)
+		DataSet<ComplexEntity> retWaysEntities = ways.join(waysGeometry, JoinHint.REPARTITION_SORT_MERGE)
 				.where(new KeySelector<WayEntity, Long>() {
 					@Override
 					public Long getKey(WayEntity value) throws Exception {
@@ -251,7 +255,7 @@ public class ProcessOSM {
 				});
 
 		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon
-				.joinWithHuge(waysGeometry).where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
+				.join(waysGeometry, JoinHint.REPARTITION_SORT_MERGE).where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
 
 		// joinedWays : id, order, role, byte[]
 		DataSet<Tuple2<Long, byte[]>> constructedPolygons = joinedWaysForPolygonConstruct.groupBy(0)
@@ -290,7 +294,7 @@ public class ProcessOSM {
 
 		// joins with attributes
 
-		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons)
+		DataSet<ComplexEntity> retPolygons = rels.join(constructedPolygons, JoinHint.REPARTITION_SORT_MERGE)
 				.where(new KeySelector<Relation, Long>() {
 					@Override
 					public Long getKey(Relation value) throws Exception {
@@ -565,13 +569,19 @@ public class ProcessOSM {
 		// assert resultFolder.mkdirs();
 		// }
 
-		// Configuration configuration = new Configuration();
+		Configuration configuration = new Configuration();
+		configuration.setInteger("taskmanager.network.numberOfBuffers", 60000);
+		configuration.setString("akka.ask.timeout", "100s" );
+		configuration.setInteger("taskmanager.numberOfTaskSlots", Runtime.getRuntime().availableProcessors());
+
+		// configuration.setLong("taskmanager.network.numberOfBuffers",4096);
 		// configuration.setLong("taskmanager.heap.mb", 4000L);
 		// configuration.setInteger("taskmanager.numberOfTaskSlots", 4);
 		// configuration.setInteger("parallelization.degree.default", 4);
 		//
 		// ExecutionEnvironment env =
 		// ExecutionEnvironment.createLocalEnvironment(configuration);
+		// env.setParallelism(Runtime.getRuntime().availableProcessors());
 		//
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
@@ -580,7 +590,7 @@ public class ProcessOSM {
 		// String file = "C:/projets/OSMImport/rhone-alpes-latest.osm.pbf";
 
 		OSMResultsStreams rs = constructOSMStreams(env, inputPbf);
-
+/*
 		rs.retNodesWithAttributes.map(new MapFunction<NodeEntity, Tuple4<Long, Double, Double, String>>() {
 			@Override
 			public Tuple4<Long, Double, Double, String> map(NodeEntity value) throws Exception {
@@ -588,7 +598,7 @@ public class ProcessOSM {
 						quoteString(MapStringTools.convertToString(value.fields)));
 			}
 		}).writeAsCsv(outputResultFolder + "/nodes.csv");
-
+*/
 		rs.retPolygons.map(new MapFunction<ComplexEntity, Tuple3<Long, String, String>>() {
 			@Override
 			public Tuple3<Long, String, String> map(ComplexEntity value) throws Exception {
@@ -605,6 +615,9 @@ public class ProcessOSM {
 			}
 
 		}).writeAsCsv(outputResultFolder + "/ways.csv");
+
+
+/*
 
 		rs.retRelations.map(new MapFunction<Relation, Tuple3<Long, String, String>>() {
 			@Override
@@ -630,7 +643,7 @@ public class ProcessOSM {
 			}
 
 		}).writeAsCsv(outputResultFolder + "/rels.csv");
-
+*/
 		// System.out.println(env.getExecutionPlan());
 		env.execute();
 	}
