@@ -143,7 +143,7 @@ public class ProcessOSM {
 				});
 
 		// create the polyline entities
-		DataSet<ComplexEntity> retWaysEntities = ways.joinWithHuge(waysGeometry)
+		DataSet<ComplexEntity> retWaysEntities = ways.join(waysGeometry)
 				.where(new KeySelector<WayEntity, Long>() {
 					@Override
 					public Long getKey(WayEntity value) throws Exception {
@@ -246,7 +246,7 @@ public class ProcessOSM {
 				});
 
 		DataSet<Tuple4<Long, Integer, Role, byte[]>> joinedWaysForPolygonConstruct = relsPolygon
-				.joinWithHuge(waysGeometry).where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
+				.join(waysGeometry).where(1).equalTo(0).projectFirst(0, 2, 3).projectSecond(1);
 
 		// joinedWays : id, order, role, byte[]
 		DataSet<Tuple2<Long, byte[]>> constructedPolygons = joinedWaysForPolygonConstruct.groupBy(0)
@@ -285,7 +285,7 @@ public class ProcessOSM {
 
 		// joins with attributes
 
-		DataSet<ComplexEntity> retPolygons = rels.joinWithHuge(constructedPolygons)
+		DataSet<ComplexEntity> retPolygons = rels.join(constructedPolygons)
 				.where(new KeySelector<Relation, Long>() {
 					@Override
 					public Long getKey(Relation value) throws Exception {
