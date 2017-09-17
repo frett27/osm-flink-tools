@@ -7,12 +7,21 @@ import junit.framework.TestCase;
 
 public class TestMapStringTools extends TestCase {
 
+	public String[][] TEST_CASES = {
+		new String[]{}	
+	};
+	
+	
+	
 	public void testConvertToString() throws Exception {
+		
 		Map<String, String> t = new HashMap<>();
-		t.put("hello", "hello");
-
+	
 		System.out.println(MapStringTools.convertToString(t));
 
 	}
 
+	
+	
+	
 }
