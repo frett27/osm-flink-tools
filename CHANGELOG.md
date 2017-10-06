@@ -4,6 +4,16 @@
 
 This file describes the changes on the project.
 
+##Version 0.3.1 - Octobre 2016
+
+- fix comma in datas, and quoted strings
+
+##Version 0.3 - October 2016
+
+- Augment the polygon construction to not use the outer and inner relations
+- Add tests, to analyze polygon construction
+- Reduce the multi polygon construction to multipolygon and boundary types
+
 ##Version 0.2 - August 2016
 
 - Fix compilation on windows

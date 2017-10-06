@@ -1,0 +1,628 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apache Flink Web Dashboard</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:8081/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="http://localhost:8081/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="http://localhost:8081/images/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="http://localhost:8081/images/manifest.json">
+    <link rel="mask-icon" href="http://localhost:8081/images/safari-pinned-tab.svg" color="#aa1919">
+    <link rel="shortcut icon" href="http://localhost:8081/images/favicon.ico">
+    <meta name="msapplication-config" content="images/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="Apache%20Flink%20Web%20Dashboard_fichiers/vendor.css" type="text/css">
+    <link rel="stylesheet" href="Apache%20Flink%20Web%20Dashboard_fichiers/index.css" type="text/css">
+    <script src="Apache%20Flink%20Web%20Dashboard_fichiers/vendor.js"></script>
+    <script src="Apache%20Flink%20Web%20Dashboard_fichiers/index.js"></script>
+  </head>
+  <body ng-app="flinkApp" ng-strict-di="" class="ng-scope">
+    <div id="sidebar" ng-class="{ 'sidebar-visible': sidebarVisible }">
+      <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="navbar-header"><a ui-sref="overview" class="navbar-brand" href="#/overview"><img alt="Apache Flink Dashboard" src="Apache%20Flink%20Web%20Dashboard_fichiers/flink-logo.png" class="logo"></a><a ui-sref="overview" class="navbar-brand navbar-brand-text" href="#/overview">Apache Flink Dashboard</a></div>
+      </nav>
+      <div class="navbar navbar-sidebar">
+        <ul class="nav">
+          <li><a ui-sref="overview" ui-sref-active="active" href="#/overview"><i class="fa fa-dashboard fa-fw"></i> 
+              Overview</a></li>
+          <li><a ui-sref="running-jobs" ui-sref-active="active" href="#/running-jobs"><i class="fa fa-tasks fa-fw"></i> 
+              Running Jobs</a></li>
+          <li><a ui-sref="completed-jobs" ui-sref-active="active" href="#/completed-jobs"><i class="fa fa-check-circle fa-fw"></i> 
+              Completed Jobs</a></li>
+          <li><a ui-sref="all-manager" ui-sref-active="active" href="#/taskmanagers"><i class="fa fa-sitemap fa-fw"></i> 
+              Task Managers</a></li>
+          <li><a ui-sref="jobmanager.config" ui-sref-active="active" href="#/jobmanager/config"><i class="fa fa-server fa-fw"></i> 
+              Job Manager</a></li>
+          <li><a ui-sref="submit" ui-sref-active="active" href="#/submit"><i class="fa fa-upload fa-fw"></i> 
+              Submit new Job</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="content" ng-class="{ 'sidebar-visible': sidebarVisible }">
+      <!-- uiView: main --><div id="main" ui-view="main" class="ng-scope">
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<!-- ngIf: job --><nav ng-if="job" class="navbar navbar-default navbar-fixed-top navbar-main ng-scope">
+  <div id="fold-button" ng-click="showSidebar()" class="btn btn-default navbar-btn pull-left"><i class="fa fa-navicon"></i></div>
+  <div class="navbar-title-job">
+    <div class="container-fluid no-padding">
+      <div class="row no-margin">
+        <div class="col-xs-1 no-padding">
+          <i title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope fa fa-circle indicator indicator-success"></i>
+        </div>
+        <div class="col-xs-11 no-padding">
+          <div class="row">
+            <div class="col-xs-12 job-name ng-binding">Flink Java Job at Thu Jul 27 10:11:28 UTC 2017</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 job-id ng-binding">cb4b2f9a4d33c619ded45f83ff167761</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ngIf: job.isStoppable && job.state=='RUNNING' -->
+  <!-- ngIf: job.state=='RUNNING' || job.state=='CREATED' || job.state=='RESTARTING' -->
+  <div class="navbar-info first last hidden-xs hidden-sm ng-binding">2017-07-27, 12:11:28<!-- ngIf: job['end-time'] > -1 --><span ng-if="job['end-time'] &gt; -1" class="ng-binding ng-scope">
+      - 
+      2017-07-28, 13:09:55</span><!-- end ngIf: job['end-time'] > -1 --></div>
+  <!-- ngIf: job.duration > -1 --><div ng-if="job.duration &gt; -1" title="1d 0h 58m 26s" class="navbar-info last first ng-binding ng-scope">1d 0h</div><!-- end ngIf: job.duration > -1 -->
+  <div class="navbar-info first last hidden-xs hidden-sm">
+    <div class="label-group">
+      <!-- ngRepeat: (status, value) in job['status-counts'] --><span title="CREATED" ng-class="getLabelClass()" status="CREATED" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">20</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] --><span title="RECONCILING" ng-class="getLabelClass()" status="RECONCILING" ng-repeat="(status, value) in job['status-counts']" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (status, value) in job['status-counts'] -->
+    </div>
+  </div>
+</nav><!-- end ngIf: job -->
+<!-- ngIf: job --><nav ng-if="job" class="navbar navbar-default navbar-fixed-top navbar-main-additional ng-scope">
+  <ul class="nav nav-tabs">
+    <li ui-sref-active="active" class="active"><a ui-sref=".plan" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761">Overview</a></li>
+    <li ui-sref-active="active"><a ui-sref=".timeline" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/timeline">Timeline</a></li>
+    <li ui-sref-active="active"><a ui-sref=".exceptions" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/exceptions">Exceptions</a></li>
+    <li ui-sref-active="active"><a ui-sref=".config" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/config">Configuration</a></li>
+  </ul>
+</nav><!-- end ngIf: job -->
+<div id="content-inner" class="has-navbar-main-additional ng-scope">
+  <!-- uiView: details --><div id="details" ui-view="details" class="ng-scope">
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<split class="ng-scope">
+  <div id="canvas" class="split" style="height: calc(50% - 5px);">
+    <div class="canvas-wrapper">
+      <div job-plan="job-plan" plan="plan" watermarks="watermarks" jobid="cb4b2f9a4d33c619ded45f83ff167761" set-node="changeNode(nodeid)" class="main-canvas ng-isolate-scope"><svg class="graph" style="width: 1628px;"><g transform="translate(130.8825045156832,7.262398280076027) scale(0.30354872109876174)"><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath" style="opacity: 1;"><path class="path" d="M1444.0833740234375,247.1006291590296L1540.0833740234375,314.32500076293945L1636.0833740234375,314.32500076293945" marker-end="url(http://localhost:8081/#arrowhead185244)" style="fill: none;"></path><defs><marker id="arrowhead185244" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2841.0166931152344,126.75L2993.5416870117188,126.75L3088.550018310547,157.74744039580875" marker-end="url(http://localhost:8081/#arrowhead185245)" style="fill: none;"></path><defs><marker id="arrowhead185245" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2902.5333557128906,370.25L2993.5416870117188,370.25L3105.631704713142,289.22500228881836" marker-end="url(http://localhost:8081/#arrowhead185246)" style="fill: none;"></path><defs><marker id="arrowhead185246" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M327.183349609375,612.3750941432811L378.183349609375,581.4750061035156L429.183349609375,581.4750061035156" marker-end="url(http://localhost:8081/#arrowhead185247)" style="fill: none;"></path><defs><marker id="arrowhead185247" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M730.3166809082031,581.4750061035156L821.3250122070312,581.4750061035156L912.3333435058594,581.4750061035156" marker-end="url(http://localhost:8081/#arrowhead185248)" style="fill: none;"></path><defs><marker id="arrowhead185248" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M723.3416900634766,882.1750030517578L821.3250122070312,882.1750030517578L912.3333435058594,882.1750030517578" marker-end="url(http://localhost:8081/#arrowhead185249)" style="fill: none;"></path><defs><marker id="arrowhead185249" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M3764.916717529297,478.4250030517578L3815.916717529297,478.4250030517578L3866.916717529297,478.4250030517578" marker-end="url(http://localhost:8081/#arrowhead185250)" style="fill: none;"></path><defs><marker id="arrowhead185250" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1444.0833740234375,134.68349891860083L1540.0833740234375,126.75L1788.6667022705078,126.75L2032.2583618164062,126.75L2265.3416900634766,126.75L2503.4166870117188,126.75L2660.933349609375,126.75" marker-end="url(http://localhost:8081/#arrowhead185251)" style="fill: none;"></path><defs><marker id="arrowhead185251" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1428.7666931152344,633.5500030517578L1540.0833740234375,633.5500030517578L1637.1083679199219,633.5500030517578" marker-end="url(http://localhost:8081/#arrowhead185252)" style="fill: none;"></path><defs><marker id="arrowhead185252" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M3362.733367919922,202.47500228881836L3417.733367919922,202.47500228881836L3554.236882762458,391.6750030517578" marker-end="url(http://localhost:8081/#arrowhead185253)" style="fill: none;"></path><defs><marker id="arrowhead185253" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2893.050018310547,1228.900001525879L2993.5416870117188,1228.900001525879L3225.6416931152344,1228.900001525879L3417.733367919922,1228.900001525879L3593.811347632271,565.1750030517578" marker-end="url(http://localhost:8081/#arrowhead185254)" style="fill: none;"></path><defs><marker id="arrowhead185254" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1054.9000244140625,581.4750061035156L1105.9000244140625,581.4750061035156L1172.2167053222656,599.222121746456" marker-end="url(http://localhost:8081/#arrowhead185255)" style="fill: none;"></path><defs><marker id="arrowhead185255" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1054.9000244140625,882.1750030517578L1105.9000244140625,882.1750030517578L1232.5949559736755,720.3000030517578" marker-end="url(http://localhost:8081/#arrowhead185256)" style="fill: none;"></path><defs><marker id="arrowhead185256" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M236.21205083342832,805.9250068664551L378.183349609375,1093.400001525879L579.7500152587891,1093.400001525879L821.3250122070312,1093.400001525879L983.6166839599609,1093.400001525879L1105.9000244140625,1093.400001525879L1300.49169921875,1093.400001525879L1540.0833740234375,1093.400001525879L1698.6250305175781,1093.400001525879" marker-end="url(http://localhost:8081/#arrowhead185257)" style="fill: none;"></path><defs><marker id="arrowhead185257" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2407.4166870117188,1012.538246477019L2503.4166870117188,957.9000015258789L2603.633346557617,957.9000015258789" marker-end="url(http://localhost:8081/#arrowhead185258)" style="fill: none;"></path><defs><marker id="arrowhead185258" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2393.616683959961,370.25L2503.4166870117188,370.25L2599.4166870117188,370.25" marker-end="url(http://localhost:8081/#arrowhead185259)" style="fill: none;"></path><defs><marker id="arrowhead185259" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1941.2500305175781,314.32500076293945L2032.2583618164062,314.32500076293945L2137.066696166992,339.47225630745" marker-end="url(http://localhost:8081/#arrowhead185260)" style="fill: none;"></path><defs><marker id="arrowhead185260" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1940.2250366210938,598.7544778325143L2032.2583618164062,577.6250038146973L2167.8372736512597,457" marker-end="url(http://localhost:8081/#arrowhead185261)" style="fill: none;"></path><defs><marker id="arrowhead185261" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2407.4166870117188,1174.2617565747387L2503.4166870117188,1228.900001525879L2608.9000244140625,1228.900001525879" marker-end="url(http://localhost:8081/#arrowhead185262)" style="fill: none;"></path><defs><marker id="arrowhead185262" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1878.7083740234375,1036.4012279271385L2032.2583618164062,939.2000007629395L2123.2666931152344,999.4080167598516" marker-end="url(http://localhost:8081/#arrowhead185263)" style="fill: none;"></path><defs><marker id="arrowhead185263" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M1837.2242651062209,730.2000045776367L2032.2583618164062,1118.400001525879L2123.2666931152344,1108.6386500831065" marker-end="url(http://localhost:8081/#arrowhead185264)" style="fill: none;"></path><defs><marker id="arrowhead185264" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M2898.316696166992,957.9000015258789L2993.5416870117188,957.9000015258789L3084.550018310547,957.9000015258789" marker-end="url(http://localhost:8081/#arrowhead185265)" style="fill: none;"></path><defs><marker id="arrowhead185265" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" style="opacity: 1;" transform="translate(1540.0833740234375,334.32500076293945)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2993.5416870117188,156.75)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2993.5416870117188,400.25)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(378.183349609375,601.4750061035156)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(821.3250122070312,611.4750061035156)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [1],<br>Sort on [1:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(821.3250122070312,912.1750030517578)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(3815.916717529297,498.4250030517578)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2032.2583618164062,146.75)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(1540.0833740234375,663.5500030517578)"><g transform="translate(-71,-20)" class="label"><foreignObject width="142" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC,1:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(3417.733367919922,222.47500228881836)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(3225.6416931152344,1248.900001525879)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(1105.9000244140625,601.4750061035156)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(1105.9000244140625,902.1750030517578)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(983.6166839599609,1113.400001525879)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2503.4166870117188,977.9000015258789)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2503.4166870117188,400.25)"><g transform="translate(-71,-20)" class="label"><foreignObject width="142" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC,1:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2032.2583618164062,344.32500076293945)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [1],<br>Sort on [1:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2032.2583618164062,607.6250038146973)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2503.4166870117188,1248.900001525879)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2032.2583618164062,969.2000007629395)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2032.2583618164062,1148.400001525879)"><g transform="translate(-66.00833129882812,-20)" class="label"><foreignObject width="132.01666259765625" height="40"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Hash Partition on [0],<br>Sort on [0:ASC]</div></div></foreignObject></g></g><g class="edgeLabel" style="opacity: 1;" transform="translate(2993.5416870117188,977.9000015258789)"><g transform="translate(-26,-10)" class="label"><foreignObject width="52" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div class="edge-label">Forward</div></div></foreignObject></g></g></g><g class="nodes"><g class="node node-normal" style="opacity: 1;" transform="translate(1300.49169921875,146.5500030517578)"><rect rx="0" ry="0" x="-143.5916748046875" y="-106.55000305175781" width="287.183349609375" height="213.10000610351562"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-133.5916748046875,-96.55000305175781)"><foreignObject width="267.183349609375" height="193.10000610351562"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/c5d3987387253f0e1cd016b7c7cbe413" class="node-label node-normal"><h3 class="node-name">Data Source</h3><h4 class="step-name">DataSource (at constructOSMStr<br>eams(ProcessOSM.java:75) (org.<br>frett27.spatialflink.inputs.OS<br>MPBFRelationInputFormat))</h4><h5>Parallelism: 10</h5><h5>Operation: (none)</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(1788.6667022705078,314.32500076293945)"><rect rx="0" ry="0" x="-152.5833282470703" y="-96.6500015258789" width="305.1666564941406" height="193.3000030517578"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-142.5833282470703,-86.6500015258789)"><foreignObject width="285.1666564941406" height="173.3000030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/936bd4260ba2a262ceca554ed7de045f" class="node-label node-normal"><h3 class="node-name">FlatMap</h3><h4 class="step-name">FlatMap (FlatMap at constructO<br>SMStreams(ProcessOSM.java:225)<br>)</h4><h5>Parallelism: 10</h5><h5>Operation: FlatMap</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(579.7500152587891,882.1750030517578)"><rect rx="0" ry="0" x="-143.5916748046875" y="-143.9499969482422" width="287.183349609375" height="287.8999938964844"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-133.5916748046875,-133.9499969482422)"><foreignObject width="267.183349609375" height="267.8999938964844"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/d20c13d46e2b6b068011ec42ddefd209" class="node-label node-normal"><h3 class="node-name">Data Source -&gt; Map</h3><h4 class="step-name">DataSource (at constructOSMStr<br>eams(ProcessOSM.java:67) (org.<br>frett27.spatialflink.inputs.OS<br>MPBFNodeInputFormat))<br> -&amp;g<br>t; Map (Map at constructOSMStr<br>eams(ProcessOSM.java:79))</h4><h5>Parallelism: 10</h5><h5>Operation: (none)<br> -&gt; Map</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(3225.6416931152344,202.47500228881836)"><rect rx="0" ry="0" x="-137.09166717529297" y="-86.75" width="274.18333435058594" height="173.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-127.09166717529297,-76.75)"><foreignObject width="254.18333435058594" height="153.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/cfab51f27568912ece063d90aeb78f6b" class="node-label node-normal"><h3 class="node-name">Join</h3><h4 class="step-name">Join(Join at constructOSMStrea<br>ms(ProcessOSM.java:303))</h4><h5>Parallelism: 10</h5><h5>Operation: Merge</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(2750.9750213623047,126.75)"><rect rx="0" ry="0" x="-90.04167175292969" y="-76.8499984741211" width="180.08334350585938" height="153.6999969482422"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-80.04167175292969,-66.8499984741211)"><foreignObject width="160.08334350585938" height="133.6999969482422"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/1a4e7a3d69370c5871e24bad032e7d8d" class="node-label node-normal"><h3 class="node-name">Map</h3><h4 class="step-name">Map (Key Extractor)</h4><h5>Parallelism: 10</h5><h5>Operation: Map</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(2750.9750213623047,370.25)"><rect rx="0" ry="0" x="-151.55833435058594" y="-96.6500015258789" width="303.1166687011719" height="193.3000030517578"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-141.55833435058594,-86.6500015258789)"><foreignObject width="283.1166687011719" height="173.3000030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/35feecc46a3a6b58d1e506b4cc0516be" class="node-label node-normal"><h3 class="node-name">GroupReduce</h3><h4 class="step-name">GroupReduce (GroupReduce at co<br>nstructOSMStreams(ProcessOSM.j<br>ava:263))</h4><h5>Parallelism: 10</h5><h5>Operation: Sorted Group Reduce</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(579.7500152587891,581.4750061035156)"><rect rx="0" ry="0" x="-150.56666564941406" y="-86.75" width="301.1333312988281" height="173.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-140.56666564941406,-76.75)"><foreignObject width="281.1333312988281" height="153.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/6cd612b28ecad3ae78cce96354294dc5" class="node-label node-normal"><h3 class="node-name">FlatMap</h3><h4 class="step-name">FlatMap (FlatMap at constructO<br>SMStreams(ProcessOSM.java:96))</h4><h5>Parallelism: 10</h5><h5>Operation: FlatMap</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(183.5916748046875,699.3750038146973)"><rect rx="0" ry="0" x="-143.5916748046875" y="-106.55000305175781" width="287.183349609375" height="213.10000610351562"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-133.5916748046875,-96.55000305175781)"><foreignObject width="267.183349609375" height="193.10000610351562"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/4826374c3ecef79009f092fc87f1fbd0" class="node-label node-normal"><h3 class="node-name">Data Source</h3><h4 class="step-name">DataSource (at constructOSMStr<br>eams(ProcessOSM.java:71) (org.<br>frett27.spatialflink.inputs.OS<br>MPBFWayInputFormat))</h4><h5>Parallelism: 10</h5><h5>Operation: (none)</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(983.6166839599609,581.4750061035156)"><rect rx="0" ry="0" x="-71.28334045410156" y="-76.8499984741211" width="142.56668090820312" height="153.6999969482422"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-61.28334045410156,-66.8499984741211)"><foreignObject width="122.56668090820312" height="133.6999969482422"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/8e95b3fc3faa4e4750cbde711d811440" class="node-label node-normal"><h3 class="node-name">Sort-Partition</h3><h4 class="step-name">Sort-Partition</h4><h5>Parallelism: 10</h5><h5>Operation: No-Op</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(983.6166839599609,882.1750030517578)"><rect rx="0" ry="0" x="-71.28334045410156" y="-76.8499984741211" width="142.56668090820312" height="153.6999969482422"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-61.28334045410156,-66.8499984741211)"><foreignObject width="122.56668090820312" height="133.6999969482422"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/228ecf71ae51060fb430fe348c99b9ac" class="node-label node-normal"><h3 class="node-name">Sort-Partition</h3><h4 class="step-name">Sort-Partition</h4><h5>Parallelism: 10</h5><h5>Operation: No-Op</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(4008.0083923339844,478.4250030517578)"><rect rx="0" ry="0" x="-141.0916748046875" y="-96.6500015258789" width="282.183349609375" height="193.3000030517578"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-131.0916748046875,-86.6500015258789)"><foreignObject width="262.183349609375" height="173.3000030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/c27238bfc0ea14d60b6f6fdc1641ca62" class="node-label node-normal"><h3 class="node-name">Data Sink</h3><h4 class="step-name">DataSink (CsvOutputFormat (pat<br>h: /tmp/result_osm/polygons.cs<br>v, delimiter: ,))</h4><h5>Parallelism: 10</h5><h5>Operation: (none)</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(3616.8250427246094,478.4250030517578)"><rect rx="0" ry="0" x="-148.0916748046875" y="-86.75" width="296.183349609375" height="173.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-138.0916748046875,-76.75)"><foreignObject width="276.183349609375" height="153.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/45238f82e678e97ac550990a3c453658" class="node-label node-normal"><h3 class="node-name">Map</h3><h4 class="step-name">Map (Map at main(ProcessOSM.ja<br>va:602))</h4><h5>Parallelism: 10</h5><h5>Operation: Map</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(1788.6667022705078,633.5500030517578)"><rect rx="0" ry="0" x="-151.55833435058594" y="-96.6500015258789" width="303.1166687011719" height="193.3000030517578"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-141.55833435058594,-86.6500015258789)"><foreignObject width="283.1166687011719" height="173.3000030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/8181cd1f6c6daa7299102f336449d700" class="node-label node-normal"><h3 class="node-name">GroupReduce</h3><h4 class="step-name">GroupReduce (GroupReduce at co<br>nstructOSMStreams(ProcessOSM.j<br>ava:117))</h4><h5>Parallelism: 10</h5><h5>Operation: Sorted Group Reduce</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(1300.49169921875,633.5500030517578)"><rect rx="0" ry="0" x="-128.2750015258789" y="-86.75" width="256.5500030517578" height="173.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-118.2750015258789,-76.75)"><foreignObject width="236.5500030517578" height="153.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/917a74105420de7e06de6c1ff0f12a55" class="node-label node-normal"><h3 class="node-name">Join</h3><h4 class="step-name">Join(Join at projectTupleX(Joi<br>nOperator.java:1281))</h4><h5>Parallelism: 10</h5><h5>Operation: Merge</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(2750.9750213623047,1228.900001525879)"><rect rx="0" ry="0" x="-142.0749969482422" y="-86.75" width="284.1499938964844" height="173.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-132.0749969482422,-76.75)"><foreignObject width="264.1499938964844" height="153.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/4cf6acc2a250d66a7cf1ff7c17ddc72a" class="node-label node-normal"><h3 class="node-name">Filter</h3><h4 class="step-name">Filter (Filter at constructOSM<br>Streams(ProcessOSM.java:322))</h4><h5>Parallelism: 10</h5><h5>Operation: FlatMap</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(1788.6667022705078,1093.400001525879)"><rect rx="0" ry="0" x="-90.04167175292969" y="-76.8499984741211" width="180.08334350585938" height="153.6999969482422"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-80.04167175292969,-66.8499984741211)"><foreignObject width="160.08334350585938" height="133.6999969482422"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/f85edca7cd21b38eaffd54ac832d8093" class="node-label node-normal"><h3 class="node-name">Map</h3><h4 class="step-name">Map (Key Extractor)</h4><h5>Parallelism: 10</h5><h5>Operation: Map</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(2750.9750213623047,957.9000015258789)"><rect rx="0" ry="0" x="-147.3416748046875" y="-114.25" width="294.683349609375" height="228.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-137.3416748046875,-104.25)"><foreignObject width="274.683349609375" height="208.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/e714408406df3514ae6489b38e33b7ad" class="node-label node-normal"><h3 class="node-name">Filter -&gt; Map</h3><h4 class="step-name">Filter (Filter at constructOSM<br>Streams(ProcessOSM.java:335))&lt;<br>br/&gt; -&gt; Map (Map at main(Pr<br>ocessOSM.java:610))</h4><h5>Parallelism: 10</h5><h5>Operation: FlatMap<br> -&gt; Map</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(2265.3416900634766,1093.400001525879)"><rect rx="0" ry="0" x="-142.0749969482422" y="-124.1500015258789" width="284.1499938964844" height="248.3000030517578"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-132.0749969482422,-114.1500015258789)"><foreignObject width="264.1499938964844" height="228.3000030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/0a4027d964338de3ddf8ea111180b1dd" class="node-label node-normal"><h3 class="node-name">Join -&gt; Map</h3><h4 class="step-name">Join(Join at constructOSMStrea<br>ms(ProcessOSM.java:156))<br> <br>-&gt; Map (Map at constructOSM<br>Streams(ProcessOSM.java:182))</h4><h5>Parallelism: 10</h5><h5>Operation: Merge<br> -&gt; Map</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(2265.3416900634766,370.25)"><rect rx="0" ry="0" x="-128.2750015258789" y="-86.75" width="256.5500030517578" height="173.5"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-118.2750015258789,-76.75)"><foreignObject width="236.5500030517578" height="153.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/cc3763db955c59180bbdc7f59567b825" class="node-label node-normal"><h3 class="node-name">Join</h3><h4 class="step-name">Join(Join at projectTupleX(Joi<br>nOperator.java:1281))</h4><h5>Parallelism: 10</h5><h5>Operation: Merge</h5></div></div></foreignObject></g></g></g><g class="node node-normal" style="opacity: 1;" transform="translate(3225.6416931152344,957.9000015258789)"><rect rx="0" ry="0" x="-141.0916748046875" y="-96.6500015258789" width="282.183349609375" height="193.3000030517578"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-131.0916748046875,-86.6500015258789)"><foreignObject width="262.183349609375" height="173.3000030517578"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><div href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/vertex/d5ebaa0bf41d0aa6301a2724f21a6013" class="node-label node-normal"><h3 class="node-name">Data Sink</h3><h4 class="step-name">DataSink (CsvOutputFormat (pat<br>h: /tmp/result_osm/ways.csv, d<br>elimiter: ,))</h4><h5>Parallelism: 10</h5><h5>Operation: (none)</h5></div></div></foreignObject></g></g></g></g></g></g></svg> <svg class="tmp" width="1" height="1"><g></g></svg> <div class="btn-group zoom-buttons"> <a class="btn btn-default zoom-in" ng-click="zoomIn()"><i class="fa fa-plus"></i></a> <a class="btn btn-default zoom-out" ng-click="zoomOut()"><i class="fa fa-minus"></i></a> </div></div>
+    </div>
+  </div>
+  <div class="gutter gutter-vertical" style="height: 10px;"></div><div id="job-panel" class="split" style="height: calc(50% - 5px);">
+    <!-- ngIf: plan --><div ng-if="plan" class="panel panel-default panel-multi ng-scope">
+      <nav class="navbar navbar-default navbar-secondary-additional">
+        <ul class="nav nav-tabs">
+          <li ui-sref-active="active" class="active"><a ui-sref=".subtasks({nodeid: nodeid})" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761">Subtasks</a></li>
+          <li ui-sref-active="active"><a ui-sref=".taskmanagers({nodeid: nodeid})" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/taskmanagers">Subtasks by TaskManager</a></li>
+          <li ui-sref-active="active"><a ui-sref=".metrics({nodeid: nodeid})" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/metrics">Task Metrics</a></li>
+          <li ui-sref-active="active"><a ui-sref=".watermarks({nodeid: nodeid})" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/watermarks">Watermarks</a></li>
+          <li ui-sref-active="active"><a ui-sref=".accumulators({nodeid: nodeid})" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/accumulators">Accumulators</a></li>
+          <li ui-sref-active="active"><a ui-sref=".checkpoints({nodeid: nodeid})" href="#/jobs/cb4b2f9a4d33c619ded45f83ff167761/checkpoints">Checkpoints</a></li>
+          <!-- ngIf: job.state == 'RUNNING' -->
+        </ul>
+      </nav>
+      <!-- uiView: node-details --><div id="node-details" ui-view="node-details" class="panel-body clean ng-scope">
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<table class="table table-body-hover table-clickable table-activable ng-scope">
+  <thead>
+    <tr>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Duration</th>
+      <th>Name</th>
+      <th>Bytes received</th>
+      <th>Records received</th>
+      <th>Bytes sent</th>
+      <th>Records sent</th>
+      <th>Parallelism</th>
+      <th>Tasks</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <!-- ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope active">
+    <!-- ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 12:11:29</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:03:25</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="51m 56s" class="ng-binding ng-scope">51m 56s</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">DataSource (at constructOSMStreams(ProcessOSM.java:75) (org.frett27.spatialflink.inputs.OSMPBFRelationInputFormat))</td>
+      <td title="0 bytes" class="ng-binding">0 B</td>
+      <td class="ng-binding">0</td>
+      <td title="2765460652 bytes" class="ng-binding">2.58 GB</td>
+      <td class="ng-binding">5,099,759</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 12:11:29</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:43:33</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="1h 32m 4s" class="ng-binding ng-scope">1h 32m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">CHAIN DataSource (at 
+constructOSMStreams(ProcessOSM.java:67) 
+(org.frett27.spatialflink.inputs.OSMPBFNodeInputFormat)) -&gt; Map (Map 
+at constructOSMStreams(ProcessOSM.java:79))</td>
+      <td title="0 bytes" class="ng-binding">0 B</td>
+      <td class="ng-binding">0</td>
+      <td title="111431293792 bytes" class="ng-binding">104 GB</td>
+      <td class="ng-binding">3,979,689,064</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 12:11:29</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:52:14</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="1h 40m 45s" class="ng-binding ng-scope">1h 40m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">DataSource (at constructOSMStreams(ProcessOSM.java:71) (org.frett27.spatialflink.inputs.OSMPBFWayInputFormat))</td>
+      <td title="0 bytes" class="ng-binding">0 B</td>
+      <td class="ng-binding">0</td>
+      <td title="204693104144 bytes" class="ng-binding">191 GB</td>
+      <td class="ng-binding">424,132,032</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:03:25</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:07:25</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="3m 59s" class="ng-binding ng-scope">3m 59s</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Map (Key Extractor)</td>
+      <td title="1382730366 bytes" class="ng-binding">1.29 GB</td>
+      <td class="ng-binding">5,099,759</td>
+      <td title="1423528398 bytes" class="ng-binding">1.33 GB</td>
+      <td class="ng-binding">5,099,759</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:03:25</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:04:33</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="1m 8s" class="ng-binding ng-scope">1m 8s</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:225))</td>
+      <td title="1382730366 bytes" class="ng-binding">1.29 GB</td>
+      <td class="ng-binding">5,099,759</td>
+      <td title="554115856 bytes" class="ng-binding">528 MB</td>
+      <td class="ng-binding">19,789,852</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 12:11:37</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 18:04:40</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="5h 53m 3s" class="ng-binding ng-scope">5h 53m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Sort-Partition</td>
+      <td title="111431294192 bytes" class="ng-binding">104 GB</td>
+      <td class="ng-binding">3,979,689,064</td>
+      <td title="111431293792 bytes" class="ng-binding">104 GB</td>
+      <td class="ng-binding">3,979,689,064</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:52:14</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 15:35:31</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="1h 43m 16s" class="ng-binding ng-scope">1h 43m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">FlatMap (FlatMap at constructOSMStreams(ProcessOSM.java:96))</td>
+      <td title="102346552112 bytes" class="ng-binding">95.3 GB</td>
+      <td class="ng-binding">424,132,032</td>
+      <td title="113633041488 bytes" class="ng-binding">106 GB</td>
+      <td class="ng-binding">4,734,710,062</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:52:15</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 18:04:40</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="4h 12m 25s" class="ng-binding ng-scope">4h 12m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Sort-Partition</td>
+      <td title="113633041888 bytes" class="ng-binding">106 GB</td>
+      <td class="ng-binding">4,734,710,062</td>
+      <td title="113633041488 bytes" class="ng-binding">106 GB</td>
+      <td class="ng-binding">4,734,710,062</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 14:51:46</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 18:04:40</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="3h 12m 53s" class="ng-binding ng-scope">3h 12m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Join(Join at projectTupleX(JoinOperator.java:1281))</td>
+      <td title="225064335360 bytes" class="ng-binding">210 GB</td>
+      <td class="ng-binding">8,714,399,126</td>
+      <td title="151510721984 bytes" class="ng-binding">141 GB</td>
+      <td class="ng-binding">4,734,710,062</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 15:52:18</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 22:28:35</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 36m 17s" class="ng-binding ng-scope">6h 36m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:117))</td>
+      <td title="151510722384 bytes" class="ng-binding">141 GB</td>
+      <td class="ng-binding">4,734,710,062</td>
+      <td title="205799605160 bytes" class="ng-binding">192 GB</td>
+      <td class="ng-binding">424,132,032</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:03:28</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 12:33:50</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="23h 30m 22s" class="ng-binding ng-scope">23h 30m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Join(Join at projectTupleX(JoinOperator.java:1281))</td>
+      <td title="103453919236 bytes" class="ng-binding">96.3 GB</td>
+      <td class="ng-binding">443,921,884</td>
+      <td title="14068722920 bytes" class="ng-binding">13.1 GB</td>
+      <td class="ng-binding">19,789,852</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 6:26:37</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 12:49:45</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 23m 7s" class="ng-binding ng-scope">6h 23m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">GroupReduce (GroupReduce at constructOSMStreams(ProcessOSM.java:263))</td>
+      <td title="14068723320 bytes" class="ng-binding">13.1 GB</td>
+      <td class="ng-binding">19,789,852</td>
+      <td title="12803580016 bytes" class="ng-binding">11.9 GB</td>
+      <td class="ng-binding">3,113,349</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:03:28</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:00:34</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="23h 57m 6s" class="ng-binding ng-scope">23h 57m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Join(Join at constructOSMStreams(ProcessOSM.java:303))</td>
+      <td title="14227109214 bytes" class="ng-binding">13.3 GB</td>
+      <td class="ng-binding">8,213,108</td>
+      <td title="13175069016 bytes" class="ng-binding">12.3 GB</td>
+      <td class="ng-binding">3,113,349</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:52:14</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 15:43:22</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="1h 51m 7s" class="ng-binding ng-scope">1h 51m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Map (Key Extractor)</td>
+      <td title="102346552112 bytes" class="ng-binding">95.3 GB</td>
+      <td class="ng-binding">424,132,032</td>
+      <td title="105739608328 bytes" class="ng-binding">98.5 GB</td>
+      <td class="ng-binding">424,132,032</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-27, 13:52:15</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:09:55</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="23h 17m 40s" class="ng-binding ng-scope">23h 17m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">CHAIN Join(Join at constructOSMStreams(ProcessOSM.java:156)) -&gt; Map (Map at constructOSMStreams(ProcessOSM.java:182))</td>
+      <td title="208639411708 bytes" class="ng-binding">194 GB</td>
+      <td class="ng-binding">848,264,064</td>
+      <td title="274137605898 bytes" class="ng-binding">255 GB</td>
+      <td class="ng-binding">416,091,141</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 6:47:43</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:09:55</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 22m 11s" class="ng-binding ng-scope">6h 22m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Filter (Filter at constructOSMStreams(ProcessOSM.java:322))</td>
+      <td title="137068802989 bytes" class="ng-binding">128 GB</td>
+      <td class="ng-binding">416,091,141</td>
+      <td title="421395918 bytes" class="ng-binding">402 MB</td>
+      <td class="ng-binding">799,758</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 6:50:40</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:09:55</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 19m 14s" class="ng-binding ng-scope">6h 19m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">Map (Map at main(ProcessOSM.java:602))</td>
+      <td title="13596465014 bytes" class="ng-binding">12.7 GB</td>
+      <td class="ng-binding">3,913,107</td>
+      <td title="17815007975 bytes" class="ng-binding">16.6 GB</td>
+      <td class="ng-binding">3,913,107</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 6:50:40</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:09:55</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 19m 14s" class="ng-binding ng-scope">6h 19m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">DataSink (CsvOutputFormat (path: /tmp/result_osm/polygons.csv, delimiter: ,))</td>
+      <td title="17815008015 bytes" class="ng-binding">16.6 GB</td>
+      <td class="ng-binding">3,913,107</td>
+      <td title="0 bytes" class="ng-binding">0 B</td>
+      <td class="ng-binding">0</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 6:47:43</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:09:55</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 22m 11s" class="ng-binding ng-scope">6h 22m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">CHAIN Filter (Filter at constructOSMStreams(ProcessOSM.java:335)) -&gt; Map (Map at main(ProcessOSM.java:610))</td>
+      <td title="137068802989 bytes" class="ng-binding">128 GB</td>
+      <td class="ng-binding">416,091,141</td>
+      <td title="152694110963 bytes" class="ng-binding">142 GB</td>
+      <td class="ng-binding">415,291,383</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices --><tbody ng-repeat="v in job.vertices" ng-class="{ active: v.id == nodeid }" ng-click="changeNode(v.id)" class="ng-scope">
+    <!-- ngIf: v.type == 'regular' --><tr ng-if="v.type == 'regular'" class="ng-scope">
+      <td><!-- ngIf: v['start-time'] > -1 --><span ng-if="v['start-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 6:47:44</span><!-- end ngIf: v['start-time'] > -1 --></td>
+      <td><!-- ngIf: v['end-time'] > -1 --><span ng-if="v['end-time'] &gt; -1" class="ng-binding ng-scope">2017-07-28, 13:09:55</span><!-- end ngIf: v['end-time'] > -1 --></td>
+      <td><!-- ngIf: v.duration > -1 --><span ng-if="v.duration &gt; -1" title="6h 22m 11s" class="ng-binding ng-scope">6h 22m</span><!-- end ngIf: v.duration > -1 --></td>
+      <td class="td-long ng-binding">DataSink (CsvOutputFormat (path: /tmp/result_osm/ways.csv, delimiter: ,))</td>
+      <td title="152694111003 bytes" class="ng-binding">142 GB</td>
+      <td class="ng-binding">415,291,383</td>
+      <td title="0 bytes" class="ng-binding">0 B</td>
+      <td class="ng-binding">0</td>
+      <td class="ng-binding">10</td>
+      <td>
+        <div class="label-group">
+          <!-- ngRepeat: (index, status) in stateList --><span title="SCHEDULED" ng-class="getLabelClass()" status="SCHEDULED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="DEPLOYING" ng-class="getLabelClass()" status="DEPLOYING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-info"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="RUNNING" ng-class="getLabelClass()" status="RUNNING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-primary"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">10</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="FAILED" ng-class="getLabelClass()" status="FAILED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-danger"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELING" ng-class="getLabelClass()" status="CANCELING" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-warning"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList --><span title="CANCELED" ng-class="getLabelClass()" status="CANCELED" ng-repeat="(index, status) in stateList" class="ng-scope ng-isolate-scope label label-default"><ng-transclude><span class="ng-binding ng-scope">0</span></ng-transclude></span><!-- end ngRepeat: (index, status) in stateList -->
+        </div>
+      </td>
+      <td> 
+        <span title="FINISHED" ng-class="getLabelClass()" status="FINISHED" class="ng-isolate-scope label label-success"><ng-transclude><span class="ng-binding ng-scope">FINISHED</span></ng-transclude></span>
+      </td>
+    </tr><!-- end ngIf: v.type == 'regular' -->
+    <!-- ngIf: nodeid && v.id == nodeid -->
+  </tbody><!-- end ngRepeat: v in job.vertices -->
+</table></div>
+    </div><!-- end ngIf: plan -->
+  </div>
+</split></div>
+</div></div>
+    </div>
+  
+</body></html>
