@@ -5,7 +5,7 @@
 Tools for integrating big pbf OSM data files in CSV or Avro files, with the geometry reconstructed. (lines, polygons).
 
 
-##Goal - Ease the use of OSM datas in flink / Hadoop clusters
+## Goal - Ease the use of OSM datas in flink / Hadoop clusters
 
 This project provide inputFormat for reading PBF OSM files and create lines, polygons, relations, permitting to use OSM data in big data stacks.
 
@@ -13,7 +13,7 @@ Polylines (Ways) Polygons are reconstructed, for a direct use, ESRI-Geometry pro
 
 This project use flink as the main framework, as this is built on top of MapReduce object, this can be ported to the standard Spark or Hadoop framwork.
 
-##Design And Output file format
+## Design And Output file format
 
 
 we use the **ESRI-Geometry java API** [https://github.com/Esri/geometry-api-java](https://github.com/Esri/geometry-api-java) for efficient **ser/deser** 
@@ -23,7 +23,7 @@ a detailed explaination of the output file format is described Here : [Output Fi
 
 
 
-##Using the tool as a standalone command line (5 mins startup)
+## Using the tool as a standalone command line (5 mins startup)
 
 This tool can now be used as a single commandline, as well as a job on a cluster.
 
@@ -39,7 +39,7 @@ this command line will create 4 folders containing the reconstructed geometries 
 if you wish to generate utf-8 or local specific csv files, add `-Dfile.encoding=UTF-8` in the command line to use the given charset in the output files, this helps integrate worldwide files or foreign countries. (this must be specified before the -jar option)
 
 
-##Using the Tool in a flink cluster or flink Job
+## Using the Tool in a flink cluster or flink Job
 
 
 ProcessOSM class, that can be used as a single process (Yarn or flink cluster):
