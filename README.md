@@ -2,7 +2,7 @@
 
 ![](https://travis-ci.org/frett27/osm-flink-tools.svg?branch=master)
 
-Tools for integrating OSM data in HDFS or CSV files, with the geometry reconstructed. (lines, polygons).
+Tools for integrating big pbf OSM data files in CSV or Avro files, with the geometry reconstructed. (lines, polygons).
 
 
 ##Goal - Ease the use of OSM datas in flink / Hadoop clusters
