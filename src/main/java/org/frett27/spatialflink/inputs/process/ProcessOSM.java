@@ -6,6 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatJoinFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -538,15 +547,55 @@ public class ProcessOSM {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
+		Options options = new Options();
+		
+		options.addOption(new Option("in", "inputPbf", true, "Protocolbuffer input file"));
+		options.addOption(new Option("out", "outputResultFolder", true, "output result folder"));
 
-		if (args.length < 2)
-			throw new Exception("not enought parameters");
-		String inputPbf = args[0];
+		CommandLineParser parser = new DefaultParser();
+		CommandLine line = null;
+		try {
+			// parse the command line arguments
+			line = parser.parse(options, args);
+		} catch (ParseException exp) {
+			// oops, something went wrong
+			System.out.println(exp.getMessage());
+			// automatically generate the help statement
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "processosm", options );
+			System.exit(1);
+		}
+		
+		String inputPbf = null;
+		
+		if (line.hasOption("in")) {
+			inputPbf = line.getOptionValue("in");
+		}
+		
+		assert inputPbf != null;
+		
+		System.out.println("  Input Pbf file :" + inputPbf);
 
-		System.out.println(" input pbf :" + inputPbf);
+		File ifile = new File(inputPbf);
+		if (!ifile.exists()) {
+			throw new Exception("input Pbf file " + ifile + " does not exists");
+		}
 
-		String outputResultFolder = args[1];
-		System.out.println(" output result folder :" + outputResultFolder);
+		String outputResultFolder = null;
+		
+		if (line.hasOption("out")) {
+			outputResultFolder = line.getOptionValue("out");
+		}
+		
+		assert outputResultFolder != null;
+		
+		System.out.println("  Output result folder :" + outputResultFolder);
+		
+		File of = new File(outputResultFolder);
+		if (!of.exists()) {
+			throw new Exception("output result folder " + of + " does not exists");
+		}
 
 		// File resultFolder = new File("f:\\temp\\testfolder2");
 		// if (!resultFolder.exists()) {
