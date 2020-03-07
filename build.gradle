@@ -5,7 +5,7 @@ version = "0.3.1-SNAPSHOT"
 
 buildscript {
 	repositories { jcenter() }
-	dependencies { classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2' //  Note PF : this plugin does not support resource transformation (needed for akka configuration files)
+	dependencies { classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0' //  Note PF : this plugin does not support resource transformation (needed for akka configuration files)
 	}
 }
 
