@@ -23,7 +23,7 @@ import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.Polygon;
 
 public class TestIsolateBadPolygons {
-
+ 
 	private static final String FAIL_TO_CONSTRUCT_POLY = "fail to construct poly :";
 	private static final File storefolder = new File("./src/test/resources/org/frett27/spatialflink/jsonfiles");
 

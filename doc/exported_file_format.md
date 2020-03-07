@@ -1,5 +1,5 @@
 
-#Tool output file format
+# Tool output file format
 
 
 This flink job create a bunch of CSV files containing the consolidated OSM datas.
@@ -13,7 +13,7 @@ This flink job create a bunch of CSV files containing the consolidated OSM datas
 			ie : relations with a multipolygon type tags, or ways with area="true" tag
 
 
-#Geometry Encoding :
+# Geometry Encoding :
 
 Several benchmark and experience return show that binary with Base64 format. the binary form use the ShapeFile Geometry format [ShapeFile Specification White Paper](https://www.esri.com/library/whitepapers/pdfs/shapefile.pdf)
 
@@ -33,7 +33,7 @@ in the following exmaple, two tags are defined : (**source** and **addr**)
 
 
 
-##Nodes.csv
+# Nodes.csv
 
 this file contains the nodes, the schema is :
 
@@ -57,7 +57,7 @@ for example :
 the nodes geometry are not encoded as a binary geometry as it is more space saving and efficient.
 
 
-#Ways.csv
+# Ways.csv
 
 this file contains the ways the file format is the following :
 
@@ -73,7 +73,7 @@ example :
 	4376147,AwAAAHA7frlgAhdAlHoFWJqWRkAr+kMzTwYXQI8g8Bu6lkZAAQAAAA0AAAAAAAAAcDt+uWACF0CUegVYmpZGQAPeuHtvAhdAyUUQQpuWRkCg2oWLgQIXQDmzAuiclkZAE0B7P38DF0ALKqp+pZZGQISJmkOtBBdAg8XhzK+WRkCciY6JOQUXQFdinpW0lkZApyTrcHQFF0C7l6ArtpZGQKco8n+iBRdAYUyfwraWRkDEo0OWuwUXQOTOlr22lkZA5NXeTPEFF0BEM/T0tpZGQFpUelwKBhdAiw3MwLeWRkCcDUP1IAYXQCvr7YW4lkZAK/pDM08GF0CPIPAbupZGQA==,highway=secondary|name=Avenue du Serment de Buchenwald|zone:maxspeed=FR:30|source:maxspeed=FR:zone30|maxspeed=30|bicycle=use_sidepath
 
 
-#Polygons.csv
+# Polygons.csv
 
 polygons are encoded in the same manner of ways 
 
@@ -83,7 +83,7 @@ example :
 
 
 
-#Rels.csv
+# Rels.csv
 
 relations are encoded inlined in a single line
 
