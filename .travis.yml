@@ -8,4 +8,5 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-install: ./gradlew build -x test && ./gradlew jar
+install: gradlew build -x test
+script: gradlew jar
