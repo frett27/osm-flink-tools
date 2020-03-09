@@ -45,8 +45,6 @@ dependencies {
 
 	compile "net.frett27:osm-gis-avro:0.1"
 	
-	
-
 	testCompile "junit:junit:4.11"
 }
 
