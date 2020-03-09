@@ -1,12 +1,12 @@
 
 #Building the project
 
-This page explain how to build the project.
+This page explains how to build the project.
 
 ##Build the project for a command line use
 
 
-This build include all `flink` and `hadoop` dependencies in a single jar, that can be used without cluster.
+This build includes all `flink` and `hadoop` dependencies in a single jar, that can be used without cluster.
 
 
 Extract the project :
@@ -21,7 +21,7 @@ the result is located in the `build\libs` folder
 Running the commandline from the root directory :
 
 
-	java -jar osm-flink-tools-[version]-all.jar rhone-alpes-latest.osm.pbf .\
+	java -jar osm-flink-tools-[version]-all.jar -in rhone-alpes-latest.osm.pbf -out .\
 
 
 
