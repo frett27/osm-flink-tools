@@ -55,7 +55,7 @@ jar {
 	manifest { attributes 'Main-Class': 'org.frett27.spatialflink.inputs.process.ProcessOSM' }
 }
 
-// this task generate a jar bundle that include all the flink stack,
+// this task generates a jar bundle that include all the flink stack,
 // and permit to use the soft from a command line
 task allJars(type: ShadowJar) {
 	from sourceSets.main.output
